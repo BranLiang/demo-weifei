@@ -8,6 +8,7 @@ import {
 } from "bizcharts";
 import DataSet from "@antv/data-set";
 import zhongqiData from './data/zhongqi'
+import { Wrapper } from './styles'
 
 const ds = new DataSet();
 /* Source data */
@@ -35,7 +36,7 @@ class App extends Component {
     console.log(dv);
 
     return (
-      <div>
+      <Wrapper>
         <Chart height={400} data={dv} forceFit>
           <Legend />
           <Axis name="year" />
@@ -64,7 +65,7 @@ class App extends Component {
             }}
           />
         </Chart>
-      </div>
+      </Wrapper>
     );
   }
 }
