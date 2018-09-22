@@ -2,19 +2,19 @@
 
 const data = [
   {
-    year: 2015,
+    year: '2015年',
     electricity: 14086584,
     water: 417020,
     waste: 721.54
   },
   {
-    year: 2016,
+    year: '2016年',
     electricity: 14708430,
     water: 224586,
     waste: 1077.6
   },
   {
-    year: 2017,
+    year: '2017年',
     electricity: 18936604,
     water: 273647,
     waste: 913.09
