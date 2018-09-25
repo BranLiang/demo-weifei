@@ -13,6 +13,7 @@ import desidaData from './data/desida'
 import dajiData from './data/daji'
 import meixingpengData from './data/meixingpeng'
 import boshiData from './data/boshiqiche'
+import shimisiData from './data/shimisi'
 import {
   Wrapper,
   ChartTitle,
@@ -32,7 +33,8 @@ const GROUP_OPTIONS = [
   {
     label: '正常企业',
     options: [
-      { label: '博世汽车技术服务有限公司', value: 'boshi' }
+      { label: '博世汽车技术服务有限公司', value: 'boshi' },
+      { label: '艾欧史密斯热水器有限公司', value: 'shimisi' },
     ]
   }
 ];
@@ -44,6 +46,7 @@ ds.createView('desida').source(desidaData)
 ds.createView('meixingpeng').source(meixingpengData)
 ds.createView('daji').source(dajiData)
 ds.createView('boshi').source(boshiData)
+ds.createView('shimisi').source(shimisiData)
 
 class App extends Component {
   constructor(props) {
@@ -68,11 +71,11 @@ class App extends Component {
       callback(row) {
         if (row.electricity) {
           hasElectricity = true
-          row.wasteDivideElectricity = row.waste / row.electricity
+          row.wasteDivideElectricity = row.waste / row.electricity * 10000
         }
         if (row.water) {
           hasWater = true
-          row.wasteDivideWater = row.waste / row.water
+          row.wasteDivideWater = row.waste / row.water * 10000
         }
         return row
       }
@@ -185,7 +188,7 @@ class App extends Component {
 
           {hasElectricity && (
             <Chart height={400} data={dv} forceFit>
-              <ChartTitle>危废电量比</ChartTitle>
+              <ChartTitle>危废电量比(吨/万度)</ChartTitle>
               <Legend />
               <Axis name="year" />
               <Axis name="wasteDivideElectricity" />
@@ -223,7 +226,7 @@ class App extends Component {
 
           {hasWater && (
             <Chart height={400} data={dv} forceFit>
-              <ChartTitle>危废水量比</ChartTitle>
+              <ChartTitle>危废水量比(吨/万吨水)</ChartTitle>
               <Legend />
               <Axis name="year" />
               <Axis name="wasteDivideWater" />
