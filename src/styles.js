@@ -9,3 +9,10 @@ export const ChartTitle = styled.div`
   text-align: center;
   font-size: 16px;
 `
+
+export const SelectorWrapper = styled.div`
+  width: 250px;
+  position: fixed;
+  left: 24px;
+  top: 48px;
+`

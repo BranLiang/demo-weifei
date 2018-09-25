@@ -11,7 +11,11 @@ import Select from '@atlaskit/select';
 import zhongqiData from './data/zhongqi'
 import desidaData from './data/desida'
 import meixingpengData from './data/meixingpeng'
-import { Wrapper, ChartTitle } from './styles'
+import {
+  Wrapper,
+  ChartTitle,
+  SelectorWrapper
+} from './styles'
 
 const GROUP_OPTIONS = [
   {
@@ -132,11 +136,13 @@ class App extends Component {
 
     return (
       <div>
-        <Select
-          options={GROUP_OPTIONS} placeholder="请选择一个企业"
-          value={selected}
-          onChange={this.handleChangeSelected}
-        />
+        <SelectorWrapper>
+          <Select
+            options={GROUP_OPTIONS} placeholder="请选择一个企业"
+            value={selected}
+            onChange={this.handleChangeSelected}
+          />
+        </SelectorWrapper>
         <Wrapper>
           {hasElectricity && (
             <Chart height={400} data={dv} forceFit>
