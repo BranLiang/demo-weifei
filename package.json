@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@antv/data-set": "^0.9.6",
+    "@atlaskit/select": "^6.0.1",
     "bizcharts": "^3.2.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
