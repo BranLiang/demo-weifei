@@ -12,6 +12,7 @@ import zhongqiData from './data/zhongqi'
 import desidaData from './data/desida'
 import dajiData from './data/daji'
 import meixingpengData from './data/meixingpeng'
+import boshiData from './data/boshiqiche'
 import {
   Wrapper,
   ChartTitle,
@@ -30,7 +31,9 @@ const GROUP_OPTIONS = [
   },
   {
     label: '正常企业',
-    options: []
+    options: [
+      { label: '博世汽车技术服务有限公司', value: 'boshi' }
+    ]
   }
 ];
 
@@ -40,6 +43,7 @@ ds.createView('zhongqi').source(zhongqiData)
 ds.createView('desida').source(desidaData)
 ds.createView('meixingpeng').source(meixingpengData)
 ds.createView('daji').source(dajiData)
+ds.createView('boshi').source(boshiData)
 
 class App extends Component {
   constructor(props) {
