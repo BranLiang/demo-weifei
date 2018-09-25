@@ -10,6 +10,7 @@ import DataSet from "@antv/data-set";
 import Select from '@atlaskit/select';
 import zhongqiData from './data/zhongqi'
 import desidaData from './data/desida'
+import dajiData from './data/daji'
 import meixingpengData from './data/meixingpeng'
 import {
   Wrapper,
@@ -21,9 +22,10 @@ const GROUP_OPTIONS = [
   {
     label: '问题企业',
     options: [
-      { label: '南京美星鹏科技实业有限公司', value: 'meixingpeng' },
       { label: '中旗科技股份有限公司', value: 'zhongqi' },
-      { label: '德司达(南京)染料有限公司', value: 'desida' }
+      { label: '南京美星鹏科技实业有限公司', value: 'meixingpeng' },
+      { label: '德司达(南京)染料有限公司', value: 'desida' },
+      { label: '南京大吉铁塔制造有限公司', value: 'daji' }
     ],
   },
   {
@@ -37,6 +39,7 @@ const ds = new DataSet();
 ds.createView('zhongqi').source(zhongqiData)
 ds.createView('desida').source(desidaData)
 ds.createView('meixingpeng').source(meixingpengData)
+ds.createView('daji').source(dajiData)
 
 class App extends Component {
   constructor(props) {
