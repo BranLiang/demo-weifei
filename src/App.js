@@ -74,55 +74,34 @@ class App extends Component {
       }
     })
 
-    const meanWasteDivideElectricity = dv.rows.reduce((sum, row) => {
-      if (row.wasteDivideElectricity) {
-        return sum + row.wasteDivideElectricity 
-      } else {
-        return sum
-      }
-    }, 0) / dv.rows.length
-    const meanWasteDivideWater = dv.rows.reduce((sum, row) => {
-      if (row.wasteDivideWater) {
-        return sum + row.wasteDivideWater 
-      } else {
-        return sum
-      }
-    }, 0) / dv.rows.length
-
     dv.transform({
       type: 'map',
-      callback(row) {
-        if (row.wasteDivideElectricity) {
-          row.meanWasteDivideElectricity = meanWasteDivideElectricity
-        }
-        if (row.wasteDivideWater) {
-          row.meanWasteDivideWater = meanWasteDivideWater
-        }
-        return row
-      }
-    })
+      callback(row, i) {
+        if (i === 0) {
+          if (row.electricity) {
+            row.electricityChangeRate = 0
+            row.WDEChangeRate = 0
+          }
+          if (row.water) {
+            row.waterChangeRate = 0
+            row.WDWChangeRate = 0
+          }
+        } else {
+          const prevRow = dv.rows[i - 1]
+          
+          if (row.electricity) {
+            const electricityChange = row.electricity - prevRow.electricity
+            const WDEChange = row.wasteDivideElectricity - prevRow.wasteDivideElectricity
+            row.electricityChangeRate = electricityChange / prevRow.electricity * 100
+            row.WDEChangeRate = WDEChange / prevRow.wasteDivideElectricity * 100
+          }
 
-    dv.transform({
-      type: 'map',
-      callback(row) {
-        if (row.wasteDivideElectricity) {
-          row.meanWEDifference = row.wasteDivideElectricity - row.meanWasteDivideElectricity
-        }
-        if (row.wasteDivideWater) {
-          row.meanWWDifference = row.wasteDivideWater - row.meanWasteDivideWater
-        }
-        return row
-      }
-    })
-
-    dv.transform({
-      type: 'map',
-      callback(row) {
-        if (row.meanWEDifference) {
-          row.meanWEDifferencePercent = row.meanWEDifference / row.meanWasteDivideElectricity * 100
-        }
-        if (row.meanWWDifference) {
-          row.meanWWDifferencePercent = row.meanWWDifference / row.meanWasteDivideWater * 100
+          if (row.water) {
+            const waterChange = row.water - prevRow.water
+            const WDWChange = row.wasteDivideWater - prevRow.wasteDivideWater
+            row.waterChangeRate = waterChange / prevRow.water * 100
+            row.WDWChangeRate = WDWChange / prevRow.wasteDivideWater * 100
+          }
         }
         return row
       }
@@ -219,6 +198,25 @@ class App extends Component {
             </Chart>
           )}
 
+          {hasElectricity && (
+            <Chart height={400} data={dv} forceFit>
+              <ChartTitle>危废电量比变化</ChartTitle>
+              <Legend />
+              <Axis name="year" />
+              <Axis name="WDEChangeRate" />
+              <Tooltip
+                crosshairs={{
+                  type: "y"
+                }}
+              />
+              <Geom
+                type="interval"
+                position="year*WDEChangeRate"
+                color={['year', '#BF2600']}
+              />
+            </Chart>
+          )}
+
           {hasWater && (
             <Chart height={400} data={dv} forceFit>
               <ChartTitle>危废水量比</ChartTitle>
@@ -232,37 +230,18 @@ class App extends Component {
               />
               <Geom
                 type="interval"
-                position="year*wasteDivideElectricity"
+                position="year*wasteDivideWater"
                 color={['year', '#FFAB00']}
-              />
-            </Chart>
-          )}
-
-          {hasElectricity && (
-            <Chart height={400} data={dv} forceFit>
-              <ChartTitle>危废电量比较均值变化百分比</ChartTitle>
-              <Legend />
-              <Axis name="year" />
-              <Axis name="meanWEDifferencePercent" />
-              <Tooltip
-                crosshairs={{
-                  type: "y"
-                }}
-              />
-              <Geom
-                type="interval"
-                position="year*meanWEDifferencePercent"
-                color={['year', '#36B37E']}
               />
             </Chart>
           )}
 
           {hasWater && (
             <Chart height={400} data={dv} forceFit>
-              <ChartTitle>危废水量比较均值变化百分比</ChartTitle>
+              <ChartTitle>危废水量比变化</ChartTitle>
               <Legend />
               <Axis name="year" />
-              <Axis name="meanWWDifferencePercent" />
+              <Axis name="WDWChangeRate" />
               <Tooltip
                 crosshairs={{
                   type: "y"
@@ -270,11 +249,12 @@ class App extends Component {
               />
               <Geom
                 type="interval"
-                position="year*meanWWDifferencePercent"
-                color={['year', '#FFE380']}
+                position="year*WDWChangeRate"
+                color={['year', '#DE350B']}
               />
             </Chart>
           )}
+
         </Wrapper>
       </div>
     );
