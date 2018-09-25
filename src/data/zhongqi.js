@@ -11,7 +11,13 @@ const data = [
     year: '2016年',
     electricity: 14708430,
     water: 224586,
-    waste: 1077.6
+    waste: 1077.60
+  },
+  {
+    year: '2017年',
+    electricity: 18936604,
+    water: 273647,
+    waste: 1209.72
   }
 ]
 

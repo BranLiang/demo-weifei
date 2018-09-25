@@ -10,6 +10,11 @@ const data = [
     year: '2016年',
     electricity: 1600335,
     waste: 152.91
+  },
+  {
+    year: '2017年',
+    electricity: 1540215,
+    waste: 71.70
   }
 ]
 
