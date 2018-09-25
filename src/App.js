@@ -22,7 +22,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selected: 'desida'
+      selected: 'zhongqi'
     }
   }
 
@@ -43,9 +43,6 @@ class App extends Component {
           hasWater = true
           row.wasteDivideWater = row.waste / row.water
         }
-        if (row.water && row.electricity) {
-          row.wasteDivideAll = row.waste / (row.electricity + row.water)
-        }
         return row
       }
     })
@@ -64,13 +61,6 @@ class App extends Component {
         return sum
       }
     }, 0) / dv.rows.length
-    const meanWasteDivideAll = dv.rows.reduce((sum, row) => {
-      if (row.wasteDivideAll) {
-        return sum + row.wasteDivideAll
-      } else {
-        return sum
-      }
-    }, 0) / dv.rows.length
 
     dv.transform({
       type: 'map',
@@ -80,9 +70,6 @@ class App extends Component {
         }
         if (row.wasteDivideWater) {
           row.meanWasteDivideWater = meanWasteDivideWater
-        }
-        if (row.wasteDivideAll) {
-          row.meanWasteDivideAll = meanWasteDivideAll
         }
         return row
       }
@@ -97,9 +84,6 @@ class App extends Component {
         if (row.wasteDivideWater) {
           row.meanWWDifference = row.wasteDivideWater - row.meanWasteDivideWater
         }
-        if (row.wasteDivideAll) {
-          row.meanWADifference = row.wasteDivideAll - row.meanWasteDivideAll
-        }
         return row
       }
     })
@@ -113,12 +97,16 @@ class App extends Component {
         if (row.meanWWDifference) {
           row.meanWWDifferencePercent = row.meanWWDifference / row.meanWasteDivideWater * 100
         }
-        if (row.meanWADifference) {
-          row.meanWADifferencePercent = row.meanWADifference / row.meanWasteDivideAll * 100
-        }
         return row
       }
     })
+
+    // 1. 电量上升，危废下降
+    // 2. 危废电量比减小一定比例
+    // 3. 水量上升，危废下降
+    // 4. 危废水量比减小一定比例
+    // 5. 危废电量比增加一定比例
+    // 6. 危废水量比增加一定比例
 
     console.log(dv);
 
@@ -217,25 +205,6 @@ class App extends Component {
           </Chart>
         )}
 
-        {hasWater && hasElectricity && (
-          <Chart height={400} data={dv} forceFit>
-            <ChartTitle>危废水量电量总和比</ChartTitle>
-            <Legend />
-            <Axis name="year" />
-            <Axis name="wasteDivieAll" />
-            <Tooltip
-              crosshairs={{
-                type: "y"
-              }}
-            />
-            <Geom
-              type="interval"
-              position="year*wasteDivieAll"
-              color={['year', '#4C9AFF']}
-            />
-          </Chart>
-        )}
-
         {hasElectricity && (
           <Chart height={400} data={dv} forceFit>
             <ChartTitle>危废电量比较均值变化百分比</ChartTitle>
@@ -270,25 +239,6 @@ class App extends Component {
               type="interval"
               position="year*meanWWDifferencePercent"
               color={['year', '#FFE380']}
-            />
-          </Chart>
-        )}
-
-        {hasWater && hasElectricity && (
-          <Chart height={400} data={dv} forceFit>
-            <ChartTitle>危废水电总量比较均值变化百分比</ChartTitle>
-            <Legend />
-            <Axis name="year" />
-            <Axis name="meanWADifferencePercent" />
-            <Tooltip
-              crosshairs={{
-                type: "y"
-              }}
-            />
-            <Geom
-              type="interval"
-              position="year*meanWADifferencePercent"
-              color={['year', '#FF7452']}
             />
           </Chart>
         )}
