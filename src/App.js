@@ -18,6 +18,7 @@ import dajiData from './data/daji'
 import meixingpengData from './data/meixingpeng'
 import boshiData from './data/boshiqiche'
 import shimisiData from './data/shimisi'
+import zhengdaData from './data/zhengda'
 import {
   Wrapper,
   ChartTitle,
@@ -40,7 +41,13 @@ const GROUP_OPTIONS = [
     label: '正常企业',
     options: [
       { label: '博世汽车技术服务有限公司', value: 'boshi' },
-      { label: '艾欧史密斯热水器有限公司', value: 'shimisi' },
+      { label: '艾欧史密斯热水器有限公司', value: 'shimisi' }
+    ]
+  },
+  {
+    label: '未知企业',
+    options: [
+      { label: '正大天晴药业集团股份有限公司', value: 'zhengda' }
     ]
   }
 ];
@@ -58,6 +65,7 @@ ds.createView('meixingpeng').source(meixingpengData)
 ds.createView('daji').source(dajiData)
 ds.createView('boshi').source(boshiData)
 ds.createView('shimisi').source(shimisiData)
+ds.createView('zhengda').source(zhengdaData)
 
 class App extends Component {
   constructor(props) {
