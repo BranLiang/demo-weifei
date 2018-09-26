@@ -71,7 +71,9 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selected: { label: '中旗科技股份有限公司', value: 'zhongqi'}
+      selected: { label: '中旗科技股份有限公司', value: 'zhongqi'},
+      warningPoint: 30,
+      errorPoint: 60
     } 
   }
 
@@ -80,7 +82,7 @@ class App extends Component {
   }
 
   render() {
-    const { selected } = this.state
+    const { selected, warningPoint, errorPoint } = this.state
     const dv = ds.getView(selected.value)
     let hasElectricity = false
     let hasWater = false
@@ -142,75 +144,75 @@ class App extends Component {
     let banners = []
     const rows = dv.rows
     rows.map((r) => {
-      if (r.wasteChangeRate > 30 && r.wasteChangeRate <= 60) {
+      if (r.wasteChangeRate > warningPoint && r.wasteChangeRate <= errorPoint) {
         banners.push({
           level: 'warning',
           message: `${r.year}危废增长较快,幅度为${r.wasteChangeRate.toFixed(2)}%`
         })
       }
-      if (r.wasteChangeRate > 60) {
+      if (r.wasteChangeRate > errorPoint) {
         banners.push({
           level: 'error',
           message: `${r.year}危废增长异常, 幅度为${r.wasteChangeRate.toFixed(2)}%`
         })
       }
-      if (r.wasteChangeRate < -30 && r.wasteChangeRate >= -60) {
+      if (r.wasteChangeRate < -warningPoint && r.wasteChangeRate >= -errorPoint) {
         banners.push({
           level: 'warning',
           message: `${r.year}危废减少较快, 幅度为${r.wasteChangeRate.toFixed(2)}%`
         })
       }
-      if (r.wasteChangeRate < -60) {
+      if (r.wasteChangeRate < -errorPoint) {
         banners.push({
           level: 'error',
           message: `${r.year}危废减少异常, 幅度为${r.wasteChangeRate.toFixed(2)}%`
         })
       }
 
-      if (r.WDEChangeRate > 30 && r.WDEChangeRate <= 60) {
+      if (r.WDEChangeRate > warningPoint && r.WDEChangeRate <= errorPoint) {
         banners.push({
           level: 'warning',
           message: `${r.year}危废电量比增长较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
         })
       }
-      if (r.WDEChangeRate > 60) {
+      if (r.WDEChangeRate > errorPoint) {
         banners.push({
           level: 'error',
           message: `${r.year}危废电量比增长异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
         })
       }
-      if (r.WDEChangeRate < -30 && r.WDEChangeRate >= -60) {
+      if (r.WDEChangeRate < -warningPoint && r.WDEChangeRate >= -errorPoint) {
         banners.push({
           level: 'warning',
           message: `${r.year}危废电量比减少较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
         })
       }
-      if (r.WDEChangeRate < -60) {
+      if (r.WDEChangeRate < -errorPoint) {
         banners.push({
           level: 'error',
           message: `${r.year}危废电量比减少异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
         })
       }
 
-      if (r.WDWChangeRate > 30 && r.WDWChangeRate <= 60) {
+      if (r.WDWChangeRate > warningPoint && r.WDWChangeRate <= errorPoint) {
         banners.push({
           level: 'warning',
           message: `${r.year}危废水量比增长较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
         })
       }
-      if (r.WDWChangeRate > 60) {
+      if (r.WDWChangeRate > errorPoint) {
         banners.push({
           level: 'error',
           message: `${r.year}危废水量比增长异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
         })
       }
-      if (r.WDWChangeRate < -30 && r.WDWChangeRate >= -60) {
+      if (r.WDWChangeRate < -warningPoint && r.WDWChangeRate >= -errorPoint) {
         banners.push({
           level: 'warning',
           message: `${r.year}危废水量比减少较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
         })
       }
-      if (r.WDWChangeRate < -60) {
+      if (r.WDWChangeRate < -errorPoint) {
         banners.push({
           level: 'error',
           message: `${r.year}危废水量比减少异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
