@@ -105,13 +105,20 @@
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/@antv/util/-/util-1.0.12.tgz#b55e921f30f1c8410f3e24a2d889e82568c3df38"
 
-"@atlaskit/analytics-next@^3.0.8":
+"@atlaskit/analytics-next@^3.0.6", "@atlaskit/analytics-next@^3.0.8":
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/@atlaskit/analytics-next/-/analytics-next-3.0.8.tgz#0f9207ae46706f4d908dfe3668b702ca501a27ee"
   dependencies:
     prop-types "^15.5.10"
 
-"@atlaskit/icon@^13.8.1":
+"@atlaskit/banner@^7.0.6":
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/@atlaskit/banner/-/banner-7.0.6.tgz#82a72d4c33f4e77b37590113c688934b3669eb78"
+  dependencies:
+    "@atlaskit/theme" "^6.0.2"
+    babel-runtime "^6.26.0"
+
+"@atlaskit/icon@^13.6.1", "@atlaskit/icon@^13.8.1", "@atlaskit/icon@^13.9.0":
   version "13.9.0"
   resolved "https://registry.yarnpkg.com/@atlaskit/icon/-/icon-13.9.0.tgz#6347e1f337c444e34ed6a2a371adf5c4100bcf0a"
   dependencies:
@@ -142,6 +149,17 @@
     "@atlaskit/theme" "^6.0.3"
     babel-runtime "^6.26.0"
     react-transition-group "^2.2.1"
+
+"@atlaskit/tag@^6.0.7":
+  version "6.0.7"
+  resolved "https://registry.yarnpkg.com/@atlaskit/tag/-/tag-6.0.7.tgz#8b674ec5e12e158309ba89467667fa0326b5146f"
+  dependencies:
+    "@atlaskit/analytics-next" "^3.0.6"
+    "@atlaskit/icon" "^13.6.1"
+    "@atlaskit/theme" "^6.0.2"
+    babel-runtime "^6.26.0"
+    create-error "^0.3.1"
+    debug "^2.2.0"
 
 "@atlaskit/theme@^6.0.2", "@atlaskit/theme@^6.0.3":
   version "6.0.3"
@@ -1951,6 +1969,10 @@ create-error-class@^3.0.0:
   resolved "https://registry.yarnpkg.com/create-error-class/-/create-error-class-3.0.2.tgz#06be7abef947a3f14a30fd610671d401bca8b7b6"
   dependencies:
     capture-stack-trace "^1.0.0"
+
+create-error@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/create-error/-/create-error-0.3.1.tgz#69810245a629e654432bf04377360003a5351a23"
 
 create-hash@^1.1.0, create-hash@^1.1.2:
   version "1.2.0"

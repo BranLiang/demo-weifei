@@ -8,6 +8,10 @@ import {
 } from "bizcharts";
 import DataSet from "@antv/data-set";
 import Select from '@atlaskit/select';
+import Banner from '@atlaskit/banner'
+import ErrorIcon from '@atlaskit/icon/glyph/error';
+import WarningIcon from '@atlaskit/icon/glyph/warning';
+import Tag from '@atlaskit/tag';
 import zhongqiData from './data/zhongqi'
 import desidaData from './data/desida'
 import dajiData from './data/daji'
@@ -17,7 +21,9 @@ import shimisiData from './data/shimisi'
 import {
   Wrapper,
   ChartTitle,
-  SelectorWrapper
+  SelectorWrapper,
+  AnalysisWrapper,
+  TagWrapper
 } from './styles'
 
 const GROUP_OPTIONS = [
@@ -38,6 +44,11 @@ const GROUP_OPTIONS = [
     ]
   }
 ];
+
+const icons = {
+  'warning': <WarningIcon label="Warning icon" secondaryColor="inherit" />,
+  'error': <ErrorIcon label="Error icon" secondaryColor="inherit" />
+}
 
 const ds = new DataSet();
 /* Source data */
@@ -85,6 +96,7 @@ class App extends Component {
       type: 'map',
       callback(row, i) {
         if (i === 0) {
+          row.wasteChangeRate = 0
           if (row.electricity) {
             row.electricityChangeRate = 0
             row.WDEChangeRate = 0
@@ -109,17 +121,100 @@ class App extends Component {
             row.waterChangeRate = waterChange / prevRow.water * 100
             row.WDWChangeRate = WDWChange / prevRow.wasteDivideWater * 100
           }
+
+          const wasteChange = row.waste - prevRow.waste
+          row.wasteChangeRate = wasteChange / prevRow.waste * 100
         }
         return row
       }
     })
 
+    // 30 - 60 warning
+    // 60 - up danger
+    let banners = []
+    const rows = dv.rows
+    rows.map((r) => {
+      if (r.wasteChangeRate > 30 && r.wasteChangeRate <= 60) {
+        banners.push({
+          level: 'warning',
+          message: `${r.year}危废增长较快,幅度为${r.wasteChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.wasteChangeRate > 60) {
+        banners.push({
+          level: 'error',
+          message: `${r.year}危废增长异常, 幅度为${r.wasteChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.wasteChangeRate < -30 && r.wasteChangeRate >= -60) {
+        banners.push({
+          level: 'warning',
+          message: `${r.year}危废减少较快, 幅度为${r.wasteChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.wasteChangeRate < -60) {
+        banners.push({
+          level: 'error',
+          message: `${r.year}危废减少异常, 幅度为${r.wasteChangeRate.toFixed(2)}%`
+        })
+      }
+
+      if (r.WDEChangeRate > 30 && r.WDEChangeRate <= 60) {
+        banners.push({
+          level: 'warning',
+          message: `${r.year}危废电量比增长较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDEChangeRate > 60) {
+        banners.push({
+          level: 'error',
+          message: `${r.year}危废电量比增长异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDEChangeRate < -30 && r.WDEChangeRate >= -60) {
+        banners.push({
+          level: 'warning',
+          message: `${r.year}危废电量比减少较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDEChangeRate < -60) {
+        banners.push({
+          level: 'error',
+          message: `${r.year}危废电量比减少异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+        })
+      }
+
+      if (r.WDWChangeRate > 30 && r.WDWChangeRate <= 60) {
+        banners.push({
+          level: 'warning',
+          message: `${r.year}危废水量比增长较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDWChangeRate > 60) {
+        banners.push({
+          level: 'error',
+          message: `${r.year}危废水量比增长异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDWChangeRate < -30 && r.WDWChangeRate >= -60) {
+        banners.push({
+          level: 'warning',
+          message: `${r.year}危废水量比减少较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDWChangeRate < -60) {
+        banners.push({
+          level: 'error',
+          message: `${r.year}危废水量比减少异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+        })
+      }
+
+      return r
+    })
     // 1. 危废电量比减小一定比例
     // 2. 危废水量比减小一定比例
     // 3. 危废电量比增加一定比例
     // 4. 危废水量比增加一定比例
-
-    console.log(dv);
 
     return (
       <div>
@@ -130,6 +225,21 @@ class App extends Component {
             onChange={this.handleChangeSelected}
           />
         </SelectorWrapper>
+        <AnalysisWrapper>
+          <TagWrapper>
+            {hasElectricity && (
+              <Tag text="用电分析" color="green" />
+            )}
+            {hasWater && (
+              <Tag text="用水分析" color="yellow" />
+            )}
+          </TagWrapper>
+          {banners.map((b, i) => (
+            <Banner key={i} isOpen icon={icons[b.level]} appearance={b.level}>
+              {b.message}
+            </Banner>
+          ))}
+        </AnalysisWrapper>
         <Wrapper>
           {hasElectricity && (
             <Chart height={400} data={dv} forceFit>
@@ -183,6 +293,23 @@ class App extends Component {
               type="interval"
               position="year*waste"
               color={['year', '#00B8D9']}
+            />
+          </Chart>
+
+          <Chart height={400} data={dv} forceFit>
+            <ChartTitle>危险废物量变化情况</ChartTitle>
+            <Legend />
+            <Axis name="year" />
+            <Axis name="wasteChangeRate" />
+            <Tooltip
+              crosshairs={{
+                type: "y"
+              }}
+            />
+            <Geom
+              type="interval"
+              position="year*wasteChangeRate"
+              color={['year', '#FF7452']}
             />
           </Chart>
 
