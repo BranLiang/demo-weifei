@@ -5,6 +5,7 @@
   "dependencies": {
     "@antv/data-set": "^0.9.6",
     "@atlaskit/banner": "^7.0.6",
+    "@atlaskit/field-range": "^5.0.7",
     "@atlaskit/icon": "^13.9.0",
     "@atlaskit/select": "^6.0.1",
     "@atlaskit/tag": "^6.0.7",

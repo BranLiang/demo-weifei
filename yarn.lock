@@ -118,6 +118,14 @@
     "@atlaskit/theme" "^6.0.2"
     babel-runtime "^6.26.0"
 
+"@atlaskit/field-range@^5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@atlaskit/field-range/-/field-range-5.0.7.tgz#21f563bdd2b0a676282d26fcf027c2f420fb3874"
+  dependencies:
+    "@atlaskit/theme" "^6.0.2"
+    babel-runtime "^6.26.0"
+    prop-types "^15.5.10"
+
 "@atlaskit/icon@^13.6.1", "@atlaskit/icon@^13.8.1", "@atlaskit/icon@^13.9.0":
   version "13.9.0"
   resolved "https://registry.yarnpkg.com/@atlaskit/icon/-/icon-13.9.0.tgz#6347e1f337c444e34ed6a2a371adf5c4100bcf0a"

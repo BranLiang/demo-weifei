@@ -9,6 +9,7 @@ import {
 import DataSet from "@antv/data-set";
 import Select from '@atlaskit/select';
 import Banner from '@atlaskit/banner'
+import FieldRange from '@atlaskit/field-range';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
 import Tag from '@atlaskit/tag';
@@ -79,6 +80,18 @@ class App extends Component {
 
   handleChangeSelected = (selected) => {
     this.setState({ selected })
+  }
+
+  onWarningPointChange = (value) => {
+    this.setState({
+      warningPoint: value
+    })
+  }
+
+  onErrorPointChange = (value) => {
+    this.setState({
+      errorPoint: value
+    })
   }
 
   render() {
@@ -229,6 +242,22 @@ class App extends Component {
     return (
       <div>
         <SelectorWrapper>
+          警告系数: {warningPoint}
+          <FieldRange
+            value={warningPoint}
+            min={1}
+            max={50}
+            step={1}
+            onChange={this.onWarningPointChange}
+          />
+          危险系数: {errorPoint}
+          <FieldRange
+            value={errorPoint}
+            min={51}
+            max={100}
+            step={1}
+            onChange={this.onErrorPointChange}
+          />
           <Select
             options={GROUP_OPTIONS} placeholder="请选择一个企业"
             value={selected}
