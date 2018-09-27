@@ -29,3 +29,7 @@ export const AnalysisWrapper = styled.div`
 export const TagWrapper = styled.div`
   margin: 8px 0;
 `
+
+export const NoticeText = styled.div`
+  font-size: 16px;
+`

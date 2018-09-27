@@ -25,8 +25,10 @@ import {
   ChartTitle,
   SelectorWrapper,
   AnalysisWrapper,
-  TagWrapper
+  TagWrapper,
+  NoticeText
 } from './styles'
+import { hasError, hasWarning } from './helper'
 
 const GROUP_OPTIONS = [
   {
@@ -42,16 +44,24 @@ const GROUP_OPTIONS = [
     label: '正常企业',
     options: [
       { label: '博世汽车技术服务有限公司', value: 'boshi' },
-      { label: '艾欧史密斯热水器有限公司', value: 'shimisi' }
-    ]
-  },
-  {
-    label: '未知企业',
-    options: [
+      { label: '艾欧史密斯热水器有限公司', value: 'shimisi' },
       { label: '正大天晴药业集团股份有限公司', value: 'zhengda' }
     ]
   }
 ];
+
+let companies = []
+GROUP_OPTIONS.forEach((group) => {
+  group.options.forEach((option) => {
+    companies.push({
+      key: option.value,
+      name: option.label,
+      type: group.label,
+      hasError: false,
+      hasWarning: false
+    })
+  })
+})
 
 const icons = {
   'warning': <WarningIcon label="Warning icon" secondaryColor="inherit" />,
@@ -71,11 +81,13 @@ ds.createView('zhengda').source(zhengdaData)
 class App extends Component {
   constructor(props) {
     super(props)
+    
     this.state = {
       selected: { label: '中旗科技股份有限公司', value: 'zhongqi'},
+      companies: companies,
       warningPoint: 30,
       errorPoint: 60
-    } 
+    }
   }
 
   handleChangeSelected = (selected) => {
@@ -95,7 +107,8 @@ class App extends Component {
   }
 
   render() {
-    const { selected, warningPoint, errorPoint } = this.state
+    const { selected, warningPoint, errorPoint, companies } = this.state
+    
     const dv = ds.getView(selected.value)
     let hasElectricity = false
     let hasWater = false
@@ -234,10 +247,46 @@ class App extends Component {
 
       return r
     })
-    // 1. 危废电量比减小一定比例
-    // 2. 危废水量比减小一定比例
-    // 3. 危废电量比增加一定比例
-    // 4. 危废水量比增加一定比例
+    
+    /* Summary */
+    let companyRows
+    const calculatedCompanies = companies.map((company) => {
+      companyRows = ds.getView(company.key).rows
+      return {
+        ...company,
+        hasError: hasError(companyRows, errorPoint),
+        hasWarning: hasWarning(companyRows, warningPoint)
+      }
+    })
+
+    const badCompaniesCount = calculatedCompanies.filter((company) => {
+      return company.type === '问题企业'
+    }).length
+
+    const badWarningCompaniesCount = calculatedCompanies.filter((company) => {
+      return company.type === '问题企业' && company.hasWarning
+    }).length
+
+    const badErrorCompaniesCount = calculatedCompanies.filter((company) => {
+      return company.type === '正常企业' && company.hasError
+    }).length
+
+    const normalCompaniesCount = calculatedCompanies.filter((company) => {
+      return company.type === '正常企业'
+    }).length
+
+    const normalWarningCompaniesCount = calculatedCompanies.filter((company) => {
+      return company.type === '正常企业' && company.hasWarning
+    }).length
+
+    const normalErrorCompaniesCount = calculatedCompanies.filter((company) => {
+      return company.type === '正常企业' && company.hasError
+    }).length
+    
+    const badCompanyErrorHitPercent = (badErrorCompaniesCount / badCompaniesCount * 100).toFixed(2)
+    const badCompanyWarningHitPercent = (badWarningCompaniesCount / badCompaniesCount * 100).toFixed(2)
+    const normalCompanyErrorHitPercent = (normalErrorCompaniesCount / normalCompaniesCount * 100).toFixed(2)
+    const normalCompanyWarningHitPercent = (normalWarningCompaniesCount / normalCompaniesCount * 100).toFixed(2)
 
     return (
       <div>
@@ -278,6 +327,12 @@ class App extends Component {
               {b.message}
             </Banner>
           ))}
+          <TagWrapper>
+            <NoticeText>违规企业警告命中率: {badCompanyWarningHitPercent}%</NoticeText>
+            <NoticeText>违规企业危险命中率: {badCompanyErrorHitPercent}%</NoticeText>
+            <NoticeText>正常企业警告命中率: {normalCompanyWarningHitPercent}%</NoticeText>
+            <NoticeText>正常企业危险命中率: {normalCompanyErrorHitPercent}%</NoticeText>
+          </TagWrapper>
         </AnalysisWrapper>
         <Wrapper>
           {hasElectricity && (
