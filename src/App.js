@@ -28,7 +28,6 @@ import {
   TagWrapper,
   NoticeText
 } from './styles'
-import { hasError, hasWarning } from './helper'
 
 const GROUP_OPTIONS = [
   {
@@ -247,51 +246,6 @@ class App extends Component {
 
       return r
     })
-    
-    /* Summary */
-    let companyRows
-    const calculatedCompanies = companies.map((company) => {
-      companyRows = ds.getView(company.key).rows
-      return {
-        ...company,
-        hasError: hasError(companyRows, errorPoint),
-        hasWarning: hasWarning(companyRows, warningPoint)
-      }
-    })
-
-    const badCompaniesCount = calculatedCompanies.filter((company) => {
-      return company.type === '问题企业'
-    }).length
-
-    const badWarningCompaniesCount = calculatedCompanies.filter((company) => {
-      return company.type === '问题企业' && company.hasWarning
-    }).length
-
-    const badErrorCompaniesCount = calculatedCompanies.filter((company) => {
-      return company.type === '正常企业' && company.hasError
-    }).length
-
-    const normalCompaniesCount = calculatedCompanies.filter((company) => {
-      return company.type === '正常企业'
-    }).length
-
-    const normalWarningCompaniesCount = calculatedCompanies.filter((company) => {
-      return company.type === '正常企业' && company.hasWarning
-    }).length
-
-    const normalErrorCompaniesCount = calculatedCompanies.filter((company) => {
-      return company.type === '正常企业' && company.hasError
-    }).length
-    
-    const badCompanyErrorHitPercent = (badErrorCompaniesCount / badCompaniesCount * 100).toFixed(2)
-    const badCompanyWarningHitPercent = (badWarningCompaniesCount / badCompaniesCount * 100).toFixed(2)
-    const normalCompanyErrorHitPercent = (normalErrorCompaniesCount / normalCompaniesCount * 100).toFixed(2)
-    const normalCompanyWarningHitPercent = (normalWarningCompaniesCount / normalCompaniesCount * 100).toFixed(2)
-
-    const summaryData = [
-      { companyCategory: '违规企业', type: 'danger', percent: badCompanyErrorHitPercent },
-      { companyCategory: '违规企业', type: 'normal', percent: 1 - badCompanyErrorHitPercent }
-    ]
 
     return (
       <div>
@@ -332,13 +286,6 @@ class App extends Component {
               {b.message}
             </Banner>
           ))}
-          <TagWrapper>
-
-            <NoticeText>违规企业警告命中率: {badCompanyWarningHitPercent}%</NoticeText>
-            <NoticeText>违规企业危险命中率: {badCompanyErrorHitPercent}%</NoticeText>
-            <NoticeText>正常企业警告命中率: {normalCompanyWarningHitPercent}%</NoticeText>
-            <NoticeText>正常企业危险命中率: {normalCompanyErrorHitPercent}%</NoticeText>
-          </TagWrapper>
         </AnalysisWrapper>
         <Wrapper>
           {hasElectricity && (
