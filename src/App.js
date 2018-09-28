@@ -288,6 +288,11 @@ class App extends Component {
     const normalCompanyErrorHitPercent = (normalErrorCompaniesCount / normalCompaniesCount * 100).toFixed(2)
     const normalCompanyWarningHitPercent = (normalWarningCompaniesCount / normalCompaniesCount * 100).toFixed(2)
 
+    const summaryData = [
+      { companyCategory: '违规企业', type: 'danger', percent: badCompanyErrorHitPercent },
+      { companyCategory: '违规企业', type: 'normal', percent: 1 - badCompanyErrorHitPercent }
+    ]
+
     return (
       <div>
         <SelectorWrapper>
@@ -328,6 +333,7 @@ class App extends Component {
             </Banner>
           ))}
           <TagWrapper>
+
             <NoticeText>违规企业警告命中率: {badCompanyWarningHitPercent}%</NoticeText>
             <NoticeText>违规企业危险命中率: {badCompanyErrorHitPercent}%</NoticeText>
             <NoticeText>正常企业警告命中率: {normalCompanyWarningHitPercent}%</NoticeText>
