@@ -38,7 +38,7 @@ const GROUP_OPTIONS = [
       { label: '南京美星鹏科技实业有限公司', value: 'meixingpeng' },
       { label: '德司达(南京)染料有限公司', value: 'desida' },
       { label: '南京大吉铁塔制造有限公司', value: 'daji' },
-      { label: '瓦克', value: 'wake' }
+      { label: '瓦克(按月分析)', value: 'wake' }
     ],
   },
   {
@@ -236,6 +236,24 @@ class App extends Component {
       return r
     })
 
+    const scale = {
+      year: {
+        tickCount: 3
+      },
+      wasteChangeRate: {
+        min: -100,
+        max: 100
+      },
+      WDEChangeRate: {
+        min: -100,
+        max: 100
+      },
+      WDWChangeRate: {
+        min: -100,
+        max: 100
+      }
+    }
+
     return (
       <div>
         <SelectorWrapper>
@@ -278,7 +296,7 @@ class App extends Component {
         </SelectorWrapper>
         <Wrapper>
           {hasElectricity && (
-            <Chart height={400} data={dv} forceFit>
+            <Chart height={400} data={dv} scale={scale} forceFit>
               <ChartTitle>电使用量</ChartTitle>
               <Axis name="year" />
               <Axis name="electricity" />
@@ -296,7 +314,7 @@ class App extends Component {
           )}
 
           {hasWater && (
-            <Chart height={400} data={dv} forceFit>
+            <Chart height={400} data={dv} scale={scale} forceFit>
               <ChartTitle>水使用量</ChartTitle>
               <Axis name="year" />
               <Axis name="water" />
@@ -313,7 +331,7 @@ class App extends Component {
             </Chart>
           )}
 
-          <Chart height={400} data={dv} forceFit>
+          <Chart height={400} data={dv} scale={scale} forceFit>
             <ChartTitle>危险废物量</ChartTitle>
             <Axis name="year" />
             <Axis name="waste" />
@@ -329,7 +347,7 @@ class App extends Component {
             />
           </Chart>
 
-          <Chart height={400} data={dv} forceFit>
+          <Chart height={400} data={dv} scale={scale} forceFit>
             <ChartTitle>危险废物量变化情况</ChartTitle>
             <Axis name="year" />
             <Axis name="wasteChangeRate" />
@@ -346,7 +364,7 @@ class App extends Component {
           </Chart>
 
           {hasElectricity && (
-            <Chart height={400} data={dv} forceFit>
+            <Chart height={400} data={dv} scale={scale} forceFit>
               <ChartTitle>危废电量比(吨/万度)</ChartTitle>
               <Axis name="year" />
               <Axis name="wasteDivideElectricity" />
@@ -364,7 +382,7 @@ class App extends Component {
           )}
 
           {hasElectricity && (
-            <Chart height={400} data={dv} forceFit>
+            <Chart height={400} data={dv} scale={scale} forceFit>
               <ChartTitle>危废电量比变化</ChartTitle>
               <Axis name="year" />
               <Axis name="WDEChangeRate" />
@@ -382,7 +400,7 @@ class App extends Component {
           )}
 
           {hasWater && (
-            <Chart height={400} data={dv} forceFit>
+            <Chart height={400} data={dv} scale={scale} forceFit>
               <ChartTitle>危废水量比(吨/万吨水)</ChartTitle>
               <Axis name="year" />
               <Axis name="wasteDivideWater" />
@@ -400,7 +418,7 @@ class App extends Component {
           )}
 
           {hasWater && (
-            <Chart height={400} data={dv} forceFit>
+            <Chart height={400} data={dv} scale={scale} forceFit>
               <ChartTitle>危废水量比变化</ChartTitle>
               <Axis name="year" />
               <Axis name="WDWChangeRate" />
