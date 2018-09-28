@@ -20,13 +20,14 @@ import meixingpengData from './data/meixingpeng'
 import boshiData from './data/boshiqiche'
 import shimisiData from './data/shimisi'
 import zhengdaData from './data/zhengda'
+import wakeData from './data/wake'
 import {
   Wrapper,
   ChartTitle,
   SelectorWrapper,
   AnalysisWrapper,
   TagWrapper,
-  NoticeText
+  SelectorContainer
 } from './styles'
 
 const GROUP_OPTIONS = [
@@ -36,7 +37,8 @@ const GROUP_OPTIONS = [
       { label: '中旗科技股份有限公司', value: 'zhongqi' },
       { label: '南京美星鹏科技实业有限公司', value: 'meixingpeng' },
       { label: '德司达(南京)染料有限公司', value: 'desida' },
-      { label: '南京大吉铁塔制造有限公司', value: 'daji' }
+      { label: '南京大吉铁塔制造有限公司', value: 'daji' },
+      { label: '瓦克', value: 'wake' }
     ],
   },
   {
@@ -48,19 +50,6 @@ const GROUP_OPTIONS = [
     ]
   }
 ];
-
-let companies = []
-GROUP_OPTIONS.forEach((group) => {
-  group.options.forEach((option) => {
-    companies.push({
-      key: option.value,
-      name: option.label,
-      type: group.label,
-      hasError: false,
-      hasWarning: false
-    })
-  })
-})
 
 const icons = {
   'warning': <WarningIcon label="Warning icon" secondaryColor="inherit" />,
@@ -76,6 +65,7 @@ ds.createView('daji').source(dajiData)
 ds.createView('boshi').source(boshiData)
 ds.createView('shimisi').source(shimisiData)
 ds.createView('zhengda').source(zhengdaData)
+ds.createView('wake').source(wakeData)
 
 class App extends Component {
   constructor(props) {
@@ -83,7 +73,6 @@ class App extends Component {
     
     this.state = {
       selected: { label: '中旗科技股份有限公司', value: 'zhongqi'},
-      companies: companies,
       warningPoint: 30,
       errorPoint: 60
     }
@@ -106,7 +95,7 @@ class App extends Component {
   }
 
   render() {
-    const { selected, warningPoint, errorPoint, companies } = this.state
+    const { selected, warningPoint, errorPoint } = this.state
     
     const dv = ds.getView(selected.value)
     let hasElectricity = false
@@ -250,48 +239,47 @@ class App extends Component {
     return (
       <div>
         <SelectorWrapper>
-          警告系数: {warningPoint}
-          <FieldRange
-            value={warningPoint}
-            min={1}
-            max={50}
-            step={1}
-            onChange={this.onWarningPointChange}
-          />
-          危险系数: {errorPoint}
-          <FieldRange
-            value={errorPoint}
-            min={51}
-            max={100}
-            step={1}
-            onChange={this.onErrorPointChange}
-          />
-          <Select
-            options={GROUP_OPTIONS} placeholder="请选择一个企业"
-            value={selected}
-            onChange={this.handleChangeSelected}
-          />
+          <SelectorContainer>
+            警告系数: {warningPoint}
+            <FieldRange
+              value={warningPoint}
+              min={1}
+              max={50}
+              step={1}
+              onChange={this.onWarningPointChange}
+            />
+            危险系数: {errorPoint}
+            <FieldRange
+              value={errorPoint}
+              min={51}
+              max={100}
+              step={1}
+              onChange={this.onErrorPointChange}
+            />
+            <Select
+              options={GROUP_OPTIONS} placeholder="请选择一个企业"
+              value={selected}
+              onChange={this.handleChangeSelected}
+            />
+            <TagWrapper>
+              {hasElectricity && (
+                <Tag text="用电分析" color="green" />
+              )}
+              {hasWater && (
+                <Tag text="用水分析" color="yellow" />
+              )}
+            </TagWrapper>
+            {banners.map((b, i) => (
+              <Banner key={i} isOpen icon={icons[b.level]} appearance={b.level}>
+                {b.message}
+              </Banner>
+            ))}
+          </SelectorContainer>
         </SelectorWrapper>
-        <AnalysisWrapper>
-          <TagWrapper>
-            {hasElectricity && (
-              <Tag text="用电分析" color="green" />
-            )}
-            {hasWater && (
-              <Tag text="用水分析" color="yellow" />
-            )}
-          </TagWrapper>
-          {banners.map((b, i) => (
-            <Banner key={i} isOpen icon={icons[b.level]} appearance={b.level}>
-              {b.message}
-            </Banner>
-          ))}
-        </AnalysisWrapper>
         <Wrapper>
           {hasElectricity && (
             <Chart height={400} data={dv} forceFit>
               <ChartTitle>电使用量</ChartTitle>
-              <Legend />
               <Axis name="year" />
               <Axis name="electricity" />
               <Tooltip
@@ -310,7 +298,6 @@ class App extends Component {
           {hasWater && (
             <Chart height={400} data={dv} forceFit>
               <ChartTitle>水使用量</ChartTitle>
-              <Legend />
               <Axis name="year" />
               <Axis name="water" />
               <Tooltip
@@ -328,7 +315,6 @@ class App extends Component {
 
           <Chart height={400} data={dv} forceFit>
             <ChartTitle>危险废物量</ChartTitle>
-            <Legend />
             <Axis name="year" />
             <Axis name="waste" />
             <Tooltip
@@ -345,7 +331,6 @@ class App extends Component {
 
           <Chart height={400} data={dv} forceFit>
             <ChartTitle>危险废物量变化情况</ChartTitle>
-            <Legend />
             <Axis name="year" />
             <Axis name="wasteChangeRate" />
             <Tooltip
@@ -363,7 +348,6 @@ class App extends Component {
           {hasElectricity && (
             <Chart height={400} data={dv} forceFit>
               <ChartTitle>危废电量比(吨/万度)</ChartTitle>
-              <Legend />
               <Axis name="year" />
               <Axis name="wasteDivideElectricity" />
               <Tooltip
@@ -382,7 +366,6 @@ class App extends Component {
           {hasElectricity && (
             <Chart height={400} data={dv} forceFit>
               <ChartTitle>危废电量比变化</ChartTitle>
-              <Legend />
               <Axis name="year" />
               <Axis name="WDEChangeRate" />
               <Tooltip
@@ -401,7 +384,6 @@ class App extends Component {
           {hasWater && (
             <Chart height={400} data={dv} forceFit>
               <ChartTitle>危废水量比(吨/万吨水)</ChartTitle>
-              <Legend />
               <Axis name="year" />
               <Axis name="wasteDivideWater" />
               <Tooltip
@@ -420,7 +402,6 @@ class App extends Component {
           {hasWater && (
             <Chart height={400} data={dv} forceFit>
               <ChartTitle>危废水量比变化</ChartTitle>
-              <Legend />
               <Axis name="year" />
               <Axis name="WDWChangeRate" />
               <Tooltip

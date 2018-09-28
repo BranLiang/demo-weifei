@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
-  max-width: 600px;
+  max-width: 850px;
   margin-top: 50px;
   margin-bottom: 50px;
-  margin-left: 300px;
+  margin-left: 430px;
 `
 
 export const ChartTitle = styled.div`
@@ -13,10 +13,15 @@ export const ChartTitle = styled.div`
 `
 
 export const SelectorWrapper = styled.div`
-  width: 250px;
+  width: 400px;
   position: fixed;
   left: 24px;
   top: 48px;
+`
+
+export const SelectorContainer = styled.div`
+  height: 100vh;
+  overflow-y: scroll;
 `
 
 export const AnalysisWrapper = styled.div`
