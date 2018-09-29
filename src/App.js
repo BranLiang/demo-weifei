@@ -17,6 +17,7 @@ import zhongqiData from './data/zhongqi'
 import desidaData from './data/desida'
 import desidaMonthData from './data/desidaM'
 import dajiData from './data/daji'
+import dajiMonthDate from './data/dajiM'
 import meixingpengData from './data/meixingpeng'
 import meixingpengMonthData from './data/meixingpengM'
 import boshiData from './data/boshiqiche'
@@ -42,6 +43,7 @@ const GROUP_OPTIONS = [
       { label: '德司达(南京)染料有限公司', value: 'desida' },
       { label: '德司达(按月分析)', value: 'desidaM' },
       { label: '南京大吉铁塔制造有限公司', value: 'daji' },
+      { label: '南京大吉铁塔(按月分析)', value: 'dajiM' },
       { label: '瓦克(按月分析)', value: 'wake' }
     ],
   },
@@ -68,6 +70,7 @@ ds.createView('desidaM').source(desidaMonthData)
 ds.createView('meixingpeng').source(meixingpengData)
 ds.createView('meixingpengM').source(meixingpengMonthData)
 ds.createView('daji').source(dajiData)
+ds.createView('dajiM').source(dajiMonthDate)
 ds.createView('boshi').source(boshiData)
 ds.createView('shimisi').source(shimisiData)
 ds.createView('zhengda').source(zhengdaData)
