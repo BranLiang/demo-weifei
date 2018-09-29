@@ -23,7 +23,8 @@ import meixingpengMonthData from './data/meixingpengM'
 import boshiData from './data/boshiqiche'
 import shimisiData from './data/shimisi'
 import zhengdaData from './data/zhengda'
-import wakeData from './data/wake'
+import wakeMonthData from './data/wakeM'
+import naerkeMonthData from './data/naerkeM'
 import {
   Wrapper,
   ChartTitle,
@@ -44,7 +45,8 @@ const GROUP_OPTIONS = [
       { label: '德司达(按月分析)', value: 'desidaM' },
       { label: '南京大吉铁塔制造有限公司', value: 'daji' },
       { label: '南京大吉铁塔(按月分析)', value: 'dajiM' },
-      { label: '瓦克(按月分析)', value: 'wake' }
+      { label: '瓦克(按月分析)', value: 'wakeM' },
+      { label: '纳尔科(按月分析)', value: 'naerkeM' }
     ],
   },
   {
@@ -74,7 +76,8 @@ ds.createView('dajiM').source(dajiMonthDate)
 ds.createView('boshi').source(boshiData)
 ds.createView('shimisi').source(shimisiData)
 ds.createView('zhengda').source(zhengdaData)
-ds.createView('wake').source(wakeData)
+ds.createView('wakeM').source(wakeMonthData)
+ds.createView('naerkeM').source(naerkeMonthData)
 
 class App extends Component {
   constructor(props) {
