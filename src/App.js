@@ -40,11 +40,11 @@ const GROUP_OPTIONS = [
     options: [
       { label: '中旗科技股份有限公司', value: 'zhongqi' },
       { label: '南京美星鹏科技实业有限公司', value: 'meixingpeng' },
-      { label: '南京美星鹏科技(按月分析)', value: 'meixingpengM' },
+      { label: '南京美星鹏科技实业有限公司(按月分析)', value: 'meixingpengM' },
       { label: '德司达(南京)染料有限公司', value: 'desida' },
-      { label: '德司达(按月分析)', value: 'desidaM' },
+      { label: '德司达(南京)染料有限公司(按月分析)', value: 'desidaM' },
       { label: '南京大吉铁塔制造有限公司', value: 'daji' },
-      { label: '南京大吉铁塔(按月分析)', value: 'dajiM' },
+      { label: '南京大吉铁塔制造有限公司(按月分析)', value: 'dajiM' },
       { label: '瓦克(按月分析)', value: 'wakeM' },
       { label: '纳尔科(按月分析)', value: 'naerkeM' }
     ],
