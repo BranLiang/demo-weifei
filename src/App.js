@@ -201,6 +201,56 @@ class App extends Component {
         })
       }
 
+      if (r.WDEChangeRate > warningPoint && r.WDEChangeRate <= errorPoint) {
+        banners.push({
+          level: 'warning',
+          message: `${r.year}危废电量比增长较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDEChangeRate > errorPoint) {
+        banners.push({
+          level: 'error',
+          message: `${r.year}危废电量比增长异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDEChangeRate < -warningPoint && r.WDEChangeRate >= -errorPoint) {
+        banners.push({
+          level: 'warning',
+          message: `${r.year}危废电量比减少较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDEChangeRate < -errorPoint) {
+        banners.push({
+          level: 'error',
+          message: `${r.year}危废电量比减少异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+        })
+      }
+
+      if (r.WDWChangeRate > warningPoint && r.WDWChangeRate <= errorPoint) {
+        banners.push({
+          level: 'warning',
+          message: `${r.year}危废水量比增长较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDWChangeRate > errorPoint) {
+        banners.push({
+          level: 'error',
+          message: `${r.year}危废水量比增长异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDWChangeRate < -warningPoint && r.WDWChangeRate >= -errorPoint) {
+        banners.push({
+          level: 'warning',
+          message: `${r.year}危废水量比减少较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+        })
+      }
+      if (r.WDWChangeRate < -errorPoint) {
+        banners.push({
+          level: 'error',
+          message: `${r.year}危废水量比减少异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+        })
+      }
+
       return r
     })
 
@@ -255,7 +305,7 @@ class App extends Component {
     let dvNew1
     if (isMonthData) {
       dsNew1 = new DataSet();
-      dsNew1.createView('summary').source(dvNew.rows.slice(0,18))
+      dsNew1.createView('summary').source(dvNew.rows.slice(0,36))
       dvNew1 = dsNew1.getView('summary')
     }
 
@@ -263,7 +313,7 @@ class App extends Component {
     let dvNew2
     if (isMonthData) {
       dsNew2 = new DataSet();
-      dsNew2.createView('summary').source(dvNew.rows.slice(18,36))
+      dsNew2.createView('summary').source(dvNew.rows.slice(36,72))
       dvNew2 = dsNew2.getView('summary')
     }
 
@@ -321,7 +371,24 @@ class App extends Component {
               <Geom
                 type="interval"
                 position="year*electricity"
-                color={['year', '#36B37E']}
+                color={'#36B37E'}
+              />
+              <Geom
+                type="line"
+                position="year*electricity"
+                color={'#36B37E'}
+                size={2}
+              />
+              <Geom
+                type="point"
+                position="year*electricity"
+                size={4}
+                shape={"circle"}
+                color={'#36B37E'}
+                style={{
+                  stroke: "#fff",
+                  lineWidth: 1
+                }}
               />
             </Chart>
           )}
@@ -339,7 +406,24 @@ class App extends Component {
               <Geom
                 type="interval"
                 position="year*water"
-                color={['year', '#172B4D']}
+                color={'#172B4D'}
+              />
+              <Geom
+                type="line"
+                position="year*water"
+                color={'#172B4D'}
+                size={2}
+              />
+              <Geom
+                type="point"
+                position="year*water"
+                size={4}
+                shape={"circle"}
+                color={'#172B4D'}
+                style={{
+                  stroke: "#fff",
+                  lineWidth: 1
+                }}
               />
             </Chart>
           )}
@@ -356,7 +440,24 @@ class App extends Component {
             <Geom
               type="interval"
               position="year*waste"
-              color={['year', '#00B8D9']}
+              color={'#00B8D9'}
+            />
+            <Geom
+              type="line"
+              position="year*waste"
+              color={'#00B8D9'}
+              size={2}
+            />
+            <Geom
+              type="point"
+              position="year*waste"
+              size={4}
+              shape={"circle"}
+              color={'#00B8D9'}
+              style={{
+                stroke: "#fff",
+                lineWidth: 1
+              }}
             />
           </Chart>
 

@@ -239,13 +239,13 @@ const data = [
     year: '2018-04',
     electricity: 972733,
     water: 11374,
-    waste: 221.94
+    waste: 121.94
   },
   {
     year: '2018-05',
     electricity: 4751277,
     water: 14200,
-    waste: 221.94
+    waste: 94.73
   },
   {
     year: '2018-06',

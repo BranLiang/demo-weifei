@@ -40,7 +40,7 @@ const data = [
   {
     year: '2015-07',
     electricity: 130830,
-    water: 1113,
+    water: 2113,
     waste: 3
   },
   {
@@ -51,21 +51,21 @@ const data = [
   },
   {
     year: '2015-09',
-    electricity: 50287,
+    electricity: 250287,
     water: 1784,
     waste: 3.99
   },
   {
     year: '2015-10',
-    electricity: 50287,
+    electricity: 250287,
     water: 2368,
     waste: 3.13
   },
   {
     year: '2015-11',
-    electricity: 84645,
+    electricity: 254645,
     water: 2779,
-    waste: 29.38
+    waste: 6.0
   },
   {
     year: '2015-12',
@@ -95,7 +95,7 @@ const data = [
     year: '2016-04',
     electricity: 141240,
     water: 3240,
-    waste: 43.24
+    waste: 33.24
   },
   {
     year: '2016-05',
