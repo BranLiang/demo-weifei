@@ -18,6 +18,7 @@ import desidaData from './data/desida'
 import desidaMonthData from './data/desidaM'
 import dajiData from './data/daji'
 import meixingpengData from './data/meixingpeng'
+import meixingpengMonthData from './data/meixingpengM'
 import boshiData from './data/boshiqiche'
 import shimisiData from './data/shimisi'
 import zhengdaData from './data/zhengda'
@@ -37,6 +38,7 @@ const GROUP_OPTIONS = [
     options: [
       { label: '中旗科技股份有限公司', value: 'zhongqi' },
       { label: '南京美星鹏科技实业有限公司', value: 'meixingpeng' },
+      { label: '南京美星鹏科技(按月分析)', value: 'meixingpengM' },
       { label: '德司达(南京)染料有限公司', value: 'desida' },
       { label: '德司达(按月分析)', value: 'desidaM' },
       { label: '南京大吉铁塔制造有限公司', value: 'daji' },
@@ -64,6 +66,7 @@ ds.createView('zhongqi').source(zhongqiData)
 ds.createView('desida').source(desidaData)
 ds.createView('desidaM').source(desidaMonthData)
 ds.createView('meixingpeng').source(meixingpengData)
+ds.createView('meixingpengM').source(meixingpengMonthData)
 ds.createView('daji').source(dajiData)
 ds.createView('boshi').source(boshiData)
 ds.createView('shimisi').source(shimisiData)

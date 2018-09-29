@@ -22,6 +22,7 @@ export const SelectorWrapper = styled.div`
 export const SelectorContainer = styled.div`
   height: 100vh;
   overflow-y: scroll;
+  padding: 2px;
 `
 
 export const AnalysisWrapper = styled.div`
