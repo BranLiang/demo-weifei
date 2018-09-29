@@ -26,6 +26,7 @@ import shimisiData from './data/shimisi'
 import zhengdaData from './data/zhengda'
 import wakeMonthData from './data/wakeM'
 import naerkeMonthData from './data/naerkeM'
+import jintongMonthData from './data/jintongM'
 import {
   Wrapper,
   ChartTitle,
@@ -48,7 +49,8 @@ const GROUP_OPTIONS = [
       { label: '南京大吉铁塔制造有限公司', value: 'daji' },
       { label: '南京大吉铁塔制造有限公司(按月分析)', value: 'dajiM' },
       { label: '瓦克(按月分析)', value: 'wakeM' },
-      { label: '纳尔科(按月分析)', value: 'naerkeM' }
+      { label: '纳尔科(按月分析)', value: 'naerkeM' },
+      { label: '金桐(按月分析)', value: 'jintongM' }
     ],
   },
   {
@@ -81,6 +83,7 @@ ds.createView('shimisi').source(shimisiData)
 ds.createView('zhengda').source(zhengdaData)
 ds.createView('wakeM').source(wakeMonthData)
 ds.createView('naerkeM').source(naerkeMonthData)
+ds.createView('jintongM').source(jintongMonthData)
 
 class App extends Component {
   constructor(props) {
@@ -198,56 +201,6 @@ class App extends Component {
         })
       }
 
-      if (r.WDEChangeRate > warningPoint && r.WDEChangeRate <= errorPoint) {
-        banners.push({
-          level: 'warning',
-          message: `${r.year}危废电量比增长较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDEChangeRate > errorPoint) {
-        banners.push({
-          level: 'error',
-          message: `${r.year}危废电量比增长异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDEChangeRate < -warningPoint && r.WDEChangeRate >= -errorPoint) {
-        banners.push({
-          level: 'warning',
-          message: `${r.year}危废电量比减少较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDEChangeRate < -errorPoint) {
-        banners.push({
-          level: 'error',
-          message: `${r.year}危废电量比减少异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-        })
-      }
-
-      if (r.WDWChangeRate > warningPoint && r.WDWChangeRate <= errorPoint) {
-        banners.push({
-          level: 'warning',
-          message: `${r.year}危废水量比增长较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDWChangeRate > errorPoint) {
-        banners.push({
-          level: 'error',
-          message: `${r.year}危废水量比增长异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDWChangeRate < -warningPoint && r.WDWChangeRate >= -errorPoint) {
-        banners.push({
-          level: 'warning',
-          message: `${r.year}危废水量比减少较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDWChangeRate < -errorPoint) {
-        banners.push({
-          level: 'error',
-          message: `${r.year}危废水量比减少异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
-        })
-      }
-
       return r
     })
 
@@ -267,6 +220,51 @@ class App extends Component {
         min: -100,
         max: 100
       }
+    }
+
+    /* Copy a new ds view */
+    const dsNew = new DataSet();
+    dsNew.createView('summary').source(dv.rows)
+    const dvNew = dsNew.getView('summary')
+
+    let foldFields = ['wasteChangeRate']
+    if (hasWater) {
+      foldFields.push('waterChangeRate') 
+    }
+    if (hasElectricity) {
+      foldFields.push('electricityChangeRate')
+    }
+
+    dvNew.transform({
+      type: 'fold',
+      fields: foldFields,
+      key: 'changeType',
+      value: 'changeRate'
+    });
+
+    dvNew.transform({
+      type: 'filter',
+      callback(row) {
+        return row.changeRate < 200;
+      }
+    })
+
+    const isMonthData = dvNew.rows.length >= 36
+    
+    let dsNew1
+    let dvNew1
+    if (isMonthData) {
+      dsNew1 = new DataSet();
+      dsNew1.createView('summary').source(dvNew.rows.slice(0,18))
+      dvNew1 = dsNew1.getView('summary')
+    }
+
+    let dsNew2
+    let dvNew2
+    if (isMonthData) {
+      dsNew2 = new DataSet();
+      dsNew2.createView('summary').source(dvNew.rows.slice(18,36))
+      dvNew2 = dsNew2.getView('summary')
     }
 
     return (
@@ -362,10 +360,10 @@ class App extends Component {
             />
           </Chart>
 
-          <Chart height={400} data={dv} scale={scale} forceFit>
-            <ChartTitle>危险废物量变化情况</ChartTitle>
+          <Chart height={400} data={dvNew} scale={scale} forceFit>
+            <ChartTitle>水电、危废变化率对比</ChartTitle>
             <Axis name="year" />
-            <Axis name="wasteChangeRate" />
+            <Axis name="changeRate" />
             <Tooltip
               crosshairs={{
                 type: "y"
@@ -373,10 +371,64 @@ class App extends Component {
             />
             <Geom
               type="interval"
-              position="year*wasteChangeRate"
-              color={['year', '#FF7452']}
+              position="year*changeRate"
+              color={['changeType', ['#00B8D9', '#172B4D', '#36B37E']]}
+              adjust={[
+                {
+                  type: "dodge",
+                  marginRatio: 1 / 32
+                }
+              ]}
             />
           </Chart>
+
+          {isMonthData && (
+            <Chart height={400} data={dvNew1} scale={scale} forceFit>
+              <ChartTitle>水电、危废变化率对比1</ChartTitle>
+              <Axis name="year" />
+              <Axis name="changeRate" />
+              <Tooltip
+                crosshairs={{
+                  type: "y"
+                }}
+              />
+              <Geom
+                type="interval"
+                position="year*changeRate"
+                color={['changeType', ['#00B8D9', '#172B4D', '#36B37E']]}
+                adjust={[
+                  {
+                    type: "dodge",
+                    marginRatio: 1 / 32
+                  }
+                ]}
+              />
+            </Chart>
+          )}
+
+          {isMonthData && (
+            <Chart height={400} data={dvNew2} scale={scale} forceFit>
+              <ChartTitle>水电、危废变化率对比2</ChartTitle>
+              <Axis name="year" />
+              <Axis name="changeRate" />
+              <Tooltip
+                crosshairs={{
+                  type: "y"
+                }}
+              />
+              <Geom
+                type="interval"
+                position="year*changeRate"
+                color={['changeType', ['#00B8D9', '#172B4D', '#36B37E']]}
+                adjust={[
+                  {
+                    type: "dodge",
+                    marginRatio: 1 / 32
+                  }
+                ]}
+              />
+            </Chart>
+          )}
 
           {hasElectricity && (
             <Chart height={400} data={dv} scale={scale} forceFit>
@@ -396,24 +448,6 @@ class App extends Component {
             </Chart>
           )}
 
-          {hasElectricity && (
-            <Chart height={400} data={dv} scale={scale} forceFit>
-              <ChartTitle>危废电量比变化</ChartTitle>
-              <Axis name="year" />
-              <Axis name="WDEChangeRate" />
-              <Tooltip
-                crosshairs={{
-                  type: "y"
-                }}
-              />
-              <Geom
-                type="interval"
-                position="year*WDEChangeRate"
-                color={['year', '#BF2600']}
-              />
-            </Chart>
-          )}
-
           {hasWater && (
             <Chart height={400} data={dv} scale={scale} forceFit>
               <ChartTitle>危废水量比(吨/万吨水)</ChartTitle>
@@ -428,24 +462,6 @@ class App extends Component {
                 type="interval"
                 position="year*wasteDivideWater"
                 color={['year', '#FFAB00']}
-              />
-            </Chart>
-          )}
-
-          {hasWater && (
-            <Chart height={400} data={dv} scale={scale} forceFit>
-              <ChartTitle>危废水量比变化</ChartTitle>
-              <Axis name="year" />
-              <Axis name="WDWChangeRate" />
-              <Tooltip
-                crosshairs={{
-                  type: "y"
-                }}
-              />
-              <Geom
-                type="interval"
-                position="year*WDWChangeRate"
-                color={['year', '#DE350B']}
               />
             </Chart>
           )}
