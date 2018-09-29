@@ -15,6 +15,7 @@ import WarningIcon from '@atlaskit/icon/glyph/warning';
 import Tag from '@atlaskit/tag';
 import zhongqiData from './data/zhongqi'
 import desidaData from './data/desida'
+import desidaMonthData from './data/desidaM'
 import dajiData from './data/daji'
 import meixingpengData from './data/meixingpeng'
 import boshiData from './data/boshiqiche'
@@ -37,6 +38,7 @@ const GROUP_OPTIONS = [
       { label: '中旗科技股份有限公司', value: 'zhongqi' },
       { label: '南京美星鹏科技实业有限公司', value: 'meixingpeng' },
       { label: '德司达(南京)染料有限公司', value: 'desida' },
+      { label: '德司达(按月分析)', value: 'desidaM' },
       { label: '南京大吉铁塔制造有限公司', value: 'daji' },
       { label: '瓦克(按月分析)', value: 'wake' }
     ],
@@ -60,6 +62,7 @@ const ds = new DataSet();
 /* Source data */
 ds.createView('zhongqi').source(zhongqiData)
 ds.createView('desida').source(desidaData)
+ds.createView('desidaM').source(desidaMonthData)
 ds.createView('meixingpeng').source(meixingpengData)
 ds.createView('daji').source(dajiData)
 ds.createView('boshi').source(boshiData)
