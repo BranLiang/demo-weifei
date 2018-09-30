@@ -238,10 +238,10 @@ class App extends Component {
 
     let foldFields = ['wasteChangeRate']
     if (hasWater) {
-      foldFields.push('waterChangeRate') 
+      foldFields.unshift('waterChangeRate') 
     }
     if (hasElectricity) {
-      foldFields.push('electricityChangeRate')
+      foldFields.unshift('electricityChangeRate')
     }
 
     dvNew.transform({
@@ -449,7 +449,7 @@ class App extends Component {
             <Geom
               type="interval"
               position="year*changeRate"
-              color={['changeType', ['#00B8D9', '#172B4D', '#36B37E']]}
+              color={['changeType', ['#36B37E', '#172B4D', '#00B8D9']]}
               adjust={[
                 {
                   type: "dodge",
@@ -472,7 +472,7 @@ class App extends Component {
               <Geom
                 type="interval"
                 position="year*changeRate"
-                color={['changeType', ['#00B8D9', '#172B4D', '#36B37E']]}
+                color={['changeType', ['#36B37E', '#172B4D', '#00B8D9']]}
                 adjust={[
                   {
                     type: "dodge",
@@ -496,7 +496,7 @@ class App extends Component {
               <Geom
                 type="interval"
                 position="year*changeRate"
-                color={['changeType', ['#00B8D9', '#172B4D', '#36B37E']]}
+                color={['changeType', ['#36B37E', '#172B4D', '#00B8D9']]}
                 adjust={[
                   {
                     type: "dodge",
@@ -520,7 +520,7 @@ class App extends Component {
               <Geom
                 type="interval"
                 position="year*changeRate"
-                color={['changeType', ['#00B8D9', '#172B4D', '#36B37E']]}
+                color={['changeType', ['#36B37E', '#172B4D', '#00B8D9']]}
                 adjust={[
                   {
                     type: "dodge",
