@@ -16,11 +16,11 @@ export const SelectorWrapper = styled.div`
   width: 400px;
   position: fixed;
   left: 24px;
-  top: 48px;
+  top: 24px;
 `
 
 export const SelectorContainer = styled.div`
-  height: calc(100vh - 60px);
+  height: calc(100vh - 48px);
   overflow-y: scroll;
   padding: 4px;
 `
