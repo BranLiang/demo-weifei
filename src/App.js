@@ -181,7 +181,7 @@ class App extends Component {
 
     rows.map((r) => {
       let checkValue = 0
-      if (Math.abs(r.waterChangeRate) > 200 || Math.abs(r.electricityChangeRate) > 200) {
+      if (r.waterChangeRate > 200 || r.electricityChangeRate > 200 || r.waste < 1) {
         return r
       }
       if (r.waterChangeRate && r.electricityChangeRate) {
@@ -237,12 +237,31 @@ class App extends Component {
     const dvNew = dsNew.getView('summary')
 
     let foldFields = ['wasteChangeRate']
+    let changeColors = ['#00B8D9']
     if (hasWater) {
       foldFields.unshift('waterChangeRate') 
+      changeColors.unshift('#172B4D')
     }
     if (hasElectricity) {
       foldFields.unshift('electricityChangeRate')
+      changeColors.unshift('#36B37E')
     }
+
+    console.log(dvNew);
+    
+
+    dvNew.transform({
+      type: 'filter',
+      callback(row) {
+        if (row.water && row.electricity) {
+          return row.waste > 1 && row.waterChangeRate < 200 && row.electricityChangeRate < 200 && row.wasteChangeRate < 200;
+        } else if (row.water) {
+          return row.waste > 1 && row.waterChangeRate < 200 && row.wasteChangeRate < 200;
+        } else {
+          return row.waste > 1 && row.electricityChangeRate < 200 && row.wasteChangeRate < 200;
+        }
+      }
+    })
 
     dvNew.transform({
       type: 'fold',
@@ -250,13 +269,6 @@ class App extends Component {
       key: 'changeType',
       value: 'changeRate'
     });
-
-    dvNew.transform({
-      type: 'filter',
-      callback(row) {
-        return row.changeRate < 200;
-      }
-    })
 
     const isMonthData = dvNew.rows.length >= 36
     
@@ -449,7 +461,7 @@ class App extends Component {
             <Geom
               type="interval"
               position="year*changeRate"
-              color={['changeType', ['#36B37E', '#172B4D', '#00B8D9']]}
+              color={['changeType', changeColors]}
               adjust={[
                 {
                   type: "dodge",
@@ -472,7 +484,7 @@ class App extends Component {
               <Geom
                 type="interval"
                 position="year*changeRate"
-                color={['changeType', ['#36B37E', '#172B4D', '#00B8D9']]}
+                color={['changeType', changeColors]}
                 adjust={[
                   {
                     type: "dodge",
@@ -496,7 +508,7 @@ class App extends Component {
               <Geom
                 type="interval"
                 position="year*changeRate"
-                color={['changeType', ['#36B37E', '#172B4D', '#00B8D9']]}
+                color={['changeType', changeColors]}
                 adjust={[
                   {
                     type: "dodge",
@@ -520,7 +532,7 @@ class App extends Component {
               <Geom
                 type="interval"
                 position="year*changeRate"
-                color={['changeType', ['#36B37E', '#172B4D', '#00B8D9']]}
+                color={['changeType', changeColors]}
                 adjust={[
                   {
                     type: "dodge",
