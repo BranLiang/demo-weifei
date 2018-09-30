@@ -27,6 +27,7 @@ import zhengdaData from './data/zhengda'
 import wakeMonthData from './data/wakeM'
 import naerkeMonthData from './data/naerkeM'
 import jintongMonthData from './data/jintongM'
+import baijingyuData from './data/baijingyu'
 import {
   Wrapper,
   ChartTitle,
@@ -57,6 +58,7 @@ const GROUP_OPTIONS = [
   {
     label: '正常企业',
     options: [
+      { label: '南京白敬宇制药有限责任公司', value: 'baijingyu' },
       { label: '博世汽车技术服务有限公司', value: 'boshi' },
       { label: '艾欧史密斯热水器有限公司', value: 'shimisi' },
       { label: '正大天晴药业集团股份有限公司', value: 'zhengda' }
@@ -85,6 +87,7 @@ ds.createView('zhengda').source(zhengdaData)
 ds.createView('wakeM').source(wakeMonthData)
 ds.createView('naerkeM').source(naerkeMonthData)
 ds.createView('jintongM').source(jintongMonthData)
+ds.createView('baijingyu').source(baijingyuData)
 
 class App extends Component {
   constructor(props) {
@@ -179,6 +182,8 @@ class App extends Component {
     let errorCount = 0
     const rows = dv.rows
 
+    const isMonthData = rows.length >= 36
+
     rows.map((r) => {
       let checkValue = 0
       if (r.waterChangeRate > 200 || r.electricityChangeRate > 200 || r.waste < 1) {
@@ -247,9 +252,6 @@ class App extends Component {
       changeColors.unshift('#36B37E')
     }
 
-    console.log(dvNew);
-    
-
     dvNew.transform({
       type: 'filter',
       callback(row) {
@@ -269,8 +271,6 @@ class App extends Component {
       key: 'changeType',
       value: 'changeRate'
     });
-
-    const isMonthData = dvNew.rows.length >= 36
     
     let dsNew1
     let dvNew1
