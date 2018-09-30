@@ -175,79 +175,33 @@ class App extends Component {
     // 60 - up danger
     let banners = []
     const rows = dv.rows
+
     rows.map((r) => {
-      if (r.wasteChangeRate > warningPoint && r.wasteChangeRate <= errorPoint) {
+      let checkValue = 0
+      if (Math.abs(r.waterChangeRate) > 200 || Math.abs(r.electricityChangeRate) > 200) {
+        return r
+      }
+      if (r.waterChangeRate && r.electricityChangeRate) {
+        checkValue = (r.waterChangeRate + r.electricityChangeRate) / 2 - r.wasteChangeRate
+      }
+      if (r.waterChangeRate && !r.electricityChangeRate) {
+        checkValue = r.waterChangeRate - r.wasteChangeRate
+      }
+      if (!r.waterChangeRate && r.electricityChangeRate) {
+        checkValue = r.electricityChangeRate - r.wasteChangeRate
+      }
+      if (checkValue > warningPoint && checkValue <= errorPoint) {
         banners.push({
           level: 'warning',
-          message: `${r.year}危废增长较快,幅度为${r.wasteChangeRate.toFixed(2)}%`
+          value: checkValue,
+          message: `${r.year}危废出现异常,指数${checkValue.toFixed(1)}%`
         })
       }
-      if (r.wasteChangeRate > errorPoint) {
+      if (checkValue > errorPoint) {
         banners.push({
           level: 'error',
-          message: `${r.year}危废增长异常, 幅度为${r.wasteChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.wasteChangeRate < -warningPoint && r.wasteChangeRate >= -errorPoint) {
-        banners.push({
-          level: 'warning',
-          message: `${r.year}危废减少较快, 幅度为${r.wasteChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.wasteChangeRate < -errorPoint) {
-        banners.push({
-          level: 'error',
-          message: `${r.year}危废减少异常, 幅度为${r.wasteChangeRate.toFixed(2)}%`
-        })
-      }
-
-      if (r.WDEChangeRate > warningPoint && r.WDEChangeRate <= errorPoint) {
-        banners.push({
-          level: 'warning',
-          message: `${r.year}危废电量比增长较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDEChangeRate > errorPoint) {
-        banners.push({
-          level: 'error',
-          message: `${r.year}危废电量比增长异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDEChangeRate < -warningPoint && r.WDEChangeRate >= -errorPoint) {
-        banners.push({
-          level: 'warning',
-          message: `${r.year}危废电量比减少较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDEChangeRate < -errorPoint) {
-        banners.push({
-          level: 'error',
-          message: `${r.year}危废电量比减少异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-        })
-      }
-
-      if (r.WDWChangeRate > warningPoint && r.WDWChangeRate <= errorPoint) {
-        banners.push({
-          level: 'warning',
-          message: `${r.year}危废水量比增长较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDWChangeRate > errorPoint) {
-        banners.push({
-          level: 'error',
-          message: `${r.year}危废水量比增长异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDWChangeRate < -warningPoint && r.WDWChangeRate >= -errorPoint) {
-        banners.push({
-          level: 'warning',
-          message: `${r.year}危废水量比减少较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
-        })
-      }
-      if (r.WDWChangeRate < -errorPoint) {
-        banners.push({
-          level: 'error',
-          message: `${r.year}危废水量比减少异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+          value: checkValue,
+          message: `${r.year}危废异常明显,指数${checkValue.toFixed(1)}%`
         })
       }
 
@@ -315,6 +269,14 @@ class App extends Component {
       dsNew2 = new DataSet();
       dsNew2.createView('summary').source(dvNew.rows.slice(36,72))
       dvNew2 = dsNew2.getView('summary')
+    }
+
+    let dsNew3
+    let dvNew3
+    if (isMonthData) {
+      dsNew3 = new DataSet();
+      dsNew3.createView('summary').source(dvNew.rows.slice(72))
+      dvNew3 = dsNew3.getView('summary')
     }
 
     return (
@@ -510,6 +472,30 @@ class App extends Component {
           {isMonthData && (
             <Chart height={400} data={dvNew2} scale={scale} forceFit>
               <ChartTitle>水电、危废变化率对比2</ChartTitle>
+              <Axis name="year" />
+              <Axis name="changeRate" />
+              <Tooltip
+                crosshairs={{
+                  type: "y"
+                }}
+              />
+              <Geom
+                type="interval"
+                position="year*changeRate"
+                color={['changeType', ['#00B8D9', '#172B4D', '#36B37E']]}
+                adjust={[
+                  {
+                    type: "dodge",
+                    marginRatio: 1 / 32
+                  }
+                ]}
+              />
+            </Chart>
+          )}
+
+          {isMonthData && (
+            <Chart height={400} data={dvNew3} scale={scale} forceFit>
+              <ChartTitle>水电、危废变化率对比3</ChartTitle>
               <Axis name="year" />
               <Axis name="changeRate" />
               <Tooltip
