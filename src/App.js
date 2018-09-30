@@ -100,8 +100,8 @@ class App extends Component {
     
     this.state = {
       selected: { label: '中旗科技股份有限公司(按月分析)', value: 'zhongqiM'},
-      warningPoint: 30,
-      errorPoint: 60
+      warningPoint: 40,
+      errorPoint: 80
     }
   }
 
@@ -207,7 +207,6 @@ class App extends Component {
         warningCount += 1
         banners.push({
           level: 'warning',
-          value: checkValue,
           message: `${r.year}出现异常,指数${checkValue.toFixed(1)}%`
         })
       }
@@ -215,9 +214,85 @@ class App extends Component {
         errorCount += 1
         banners.push({
           level: 'error',
-          value: checkValue,
           message: `${r.year}异常明显,指数${checkValue.toFixed(1)}%`
         })
+      }
+      
+      if (!isMonthData) {
+        if (r.wasteChangeRate > warningPoint && r.wasteChangeRate <= errorPoint) {
+          banners.push({
+            level: 'warning',
+            message: `${r.year}危废增长较快,幅度为${r.wasteChangeRate.toFixed(2)}%`
+          })
+        }
+        if (r.wasteChangeRate > errorPoint) {
+          banners.push({
+            level: 'error',
+            message: `${r.year}危废增长异常, 幅度为${r.wasteChangeRate.toFixed(2)}%`
+          })
+        }
+        if (r.wasteChangeRate < -warningPoint && r.wasteChangeRate >= -errorPoint) {
+          banners.push({
+            level: 'warning',
+            message: `${r.year}危废减少较快, 幅度为${r.wasteChangeRate.toFixed(2)}%`
+          })
+        }
+        if (r.wasteChangeRate < -errorPoint) {
+          banners.push({
+            level: 'error',
+            message: `${r.year}危废减少异常, 幅度为${r.wasteChangeRate.toFixed(2)}%`
+          })
+        }
+  
+        if (r.WDEChangeRate > warningPoint && r.WDEChangeRate <= errorPoint) {
+          banners.push({
+            level: 'warning',
+            message: `${r.year}危废电量比增长较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+          })
+        }
+        if (r.WDEChangeRate > errorPoint) {
+          banners.push({
+            level: 'error',
+            message: `${r.year}危废电量比增长异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+          })
+        }
+        if (r.WDEChangeRate < -warningPoint && r.WDEChangeRate >= -errorPoint) {
+          banners.push({
+            level: 'warning',
+            message: `${r.year}危废电量比减少较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+          })
+        }
+        if (r.WDEChangeRate < -errorPoint) {
+          banners.push({
+            level: 'error',
+            message: `${r.year}危废电量比减少异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
+          })
+        }
+  
+        if (r.WDWChangeRate > warningPoint && r.WDWChangeRate <= errorPoint) {
+          banners.push({
+            level: 'warning',
+            message: `${r.year}危废水量比增长较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+          })
+        }
+        if (r.WDWChangeRate > errorPoint) {
+          banners.push({
+            level: 'error',
+            message: `${r.year}危废水量比增长异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+          })
+        }
+        if (r.WDWChangeRate < -warningPoint && r.WDWChangeRate >= -errorPoint) {
+          banners.push({
+            level: 'warning',
+            message: `${r.year}危废水量比减少较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+          })
+        }
+        if (r.WDWChangeRate < -errorPoint) {
+          banners.push({
+            level: 'error',
+            message: `${r.year}危废水量比减少异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
+          })
+        }
       }
 
       return r
@@ -308,16 +383,16 @@ class App extends Component {
             警告系数: {warningPoint}
             <FieldRange
               value={warningPoint}
-              min={1}
-              max={50}
+              min={10}
+              max={70}
               step={1}
               onChange={this.onWarningPointChange}
             />
             危险系数: {errorPoint}
             <FieldRange
               value={errorPoint}
-              min={51}
-              max={100}
+              min={71}
+              max={150}
               step={1}
               onChange={this.onErrorPointChange}
             />
