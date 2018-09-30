@@ -52,3 +52,9 @@ export const BadgeWrapper = styled.span`
     background-color: #F4F5F7;
   }
 `;
+
+export const CompanyName = styled.div`
+  color: #8993A4;
+  font-size: 16px;
+  text-align: center;
+`

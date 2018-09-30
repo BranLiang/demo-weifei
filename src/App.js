@@ -34,7 +34,8 @@ import {
   AnalysisWrapper,
   TagWrapper,
   SelectorContainer,
-  BadgeWrapper
+  BadgeWrapper,
+  CompanyName
 } from './styles'
 
 const GROUP_OPTIONS = [
@@ -566,6 +567,8 @@ class App extends Component {
               />
             </Chart>
           )}
+
+          <CompanyName>南京酷猿信息技术有限公司©2018</CompanyName>
 
         </Wrapper>
       </div>
