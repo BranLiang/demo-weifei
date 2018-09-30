@@ -101,7 +101,7 @@ class App extends Component {
     this.state = {
       selected: { label: '中旗科技股份有限公司(按月分析)', value: 'zhongqiM'},
       warningPoint: 40,
-      errorPoint: 80
+      errorPoint: 70
     }
   }
 
@@ -186,8 +186,8 @@ class App extends Component {
     let warningCount = 0
     let errorCount = 0
     const rows = dv.rows
-
-    const isMonthData = rows.length >= 36
+    
+    const isMonthData = rows.length >= 20
 
     rows.map((r) => {
       let checkValue = 0
@@ -383,15 +383,15 @@ class App extends Component {
             警告系数: {warningPoint}
             <FieldRange
               value={warningPoint}
-              min={10}
-              max={70}
+              min={1}
+              max={60}
               step={1}
               onChange={this.onWarningPointChange}
             />
             危险系数: {errorPoint}
             <FieldRange
               value={errorPoint}
-              min={71}
+              min={61}
               max={150}
               step={1}
               onChange={this.onErrorPointChange}
