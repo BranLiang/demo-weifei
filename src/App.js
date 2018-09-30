@@ -29,6 +29,7 @@ import naerkeMonthData from './data/naerkeM'
 import jintongMonthData from './data/jintongM'
 import baijingyuData from './data/baijingyu'
 import weixunData from './data/weixun'
+import jpysData from './data/jpys'
 import {
   Wrapper,
   ChartTitle,
@@ -61,9 +62,9 @@ const GROUP_OPTIONS = [
     options: [
       { label: '南京白敬宇制药有限责任公司', value: 'baijingyu' },
       { label: '维迅化工(南京)有限公司', value: 'weixun' },
+      { label: '南京金浦英萨橡胶合成有限公司', value: 'jpys' },
       { label: '博世汽车技术服务有限公司', value: 'boshi' },
-      { label: '艾欧史密斯热水器有限公司', value: 'shimisi' },
-      { label: '正大天晴药业集团股份有限公司', value: 'zhengda' }
+      { label: '艾欧史密斯热水器有限公司', value: 'shimisi' }
     ]
   }
 ];
@@ -91,6 +92,7 @@ ds.createView('naerkeM').source(naerkeMonthData)
 ds.createView('jintongM').source(jintongMonthData)
 ds.createView('baijingyu').source(baijingyuData)
 ds.createView('weixun').source(weixunData)
+ds.createView('jpys').source(jpysData)
 
 class App extends Component {
   constructor(props) {
