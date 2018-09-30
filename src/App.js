@@ -31,7 +31,6 @@ import {
   Wrapper,
   ChartTitle,
   SelectorWrapper,
-  AnalysisWrapper,
   TagWrapper,
   SelectorContainer,
   BadgeWrapper,
