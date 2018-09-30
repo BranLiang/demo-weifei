@@ -13,7 +13,7 @@ const data = [
   },
   {
     year: '2017年',
-    water: 543026,
+    water: 398878,
     waste: 1588.66
   }
 ]
