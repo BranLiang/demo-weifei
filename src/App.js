@@ -8,6 +8,7 @@ import {
 import DataSet from "@antv/data-set";
 import Select from '@atlaskit/select';
 import Banner from '@atlaskit/banner'
+import Badge from '@atlaskit/badge'
 import FieldRange from '@atlaskit/field-range';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
@@ -32,7 +33,8 @@ import {
   SelectorWrapper,
   AnalysisWrapper,
   TagWrapper,
-  SelectorContainer
+  SelectorContainer,
+  BadgeWrapper
 } from './styles'
 
 const GROUP_OPTIONS = [
@@ -314,7 +316,16 @@ class App extends Component {
               {hasWater && (
                 <Tag text="用水分析" color="yellow" />
               )}
+              <BadgeWrapper>
+                <span>危险️</span>
+                <Badge appearance="important">{errorCount}</Badge>
+              </BadgeWrapper>
+              <BadgeWrapper>
+                <span>警告</span>
+                <Badge>{warningCount}</Badge>
+              </BadgeWrapper>
             </TagWrapper>
+            
             {banners.map((b, i) => (
               <Banner key={i} isOpen icon={icons[b.level]} appearance={b.level}>
                 {b.message}

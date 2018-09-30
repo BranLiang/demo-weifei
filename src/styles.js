@@ -39,3 +39,16 @@ export const TagWrapper = styled.div`
 export const NoticeText = styled.div`
   font-size: 16px;
 `
+
+export const BadgeWrapper = styled.span`
+  border-radius: 5px;
+  padding: 2px 5px;
+
+  span {
+    margin-right: 5px;
+  }
+
+  &:hover {
+    background-color: #F4F5F7;
+  }
+`;
