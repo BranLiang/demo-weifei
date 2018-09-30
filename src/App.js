@@ -92,7 +92,7 @@ class App extends Component {
     super(props)
     
     this.state = {
-      selected: { label: '中旗科技股份有限公司', value: 'zhongqi'},
+      selected: { label: '中旗科技股份有限公司(按月分析)', value: 'zhongqiM'},
       warningPoint: 30,
       errorPoint: 60
     }
