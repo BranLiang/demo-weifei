@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@antv/data-set": "^0.9.6",
+    "@atlaskit/badge": "^9.1.4",
     "@atlaskit/banner": "^7.0.6",
     "@atlaskit/field-range": "^5.0.7",
     "@atlaskit/icon": "^13.9.0",

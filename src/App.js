@@ -3,8 +3,7 @@ import {
   Chart,
   Geom,
   Axis,
-  Tooltip,
-  Legend
+  Tooltip
 } from "bizcharts";
 import DataSet from "@antv/data-set";
 import Select from '@atlaskit/select';
@@ -174,6 +173,8 @@ class App extends Component {
     // 30 - 60 warning
     // 60 - up danger
     let banners = []
+    let warningCount = 0
+    let errorCount = 0
     const rows = dv.rows
 
     rows.map((r) => {
@@ -191,17 +192,19 @@ class App extends Component {
         checkValue = r.electricityChangeRate - r.wasteChangeRate
       }
       if (checkValue > warningPoint && checkValue <= errorPoint) {
+        warningCount += 1
         banners.push({
           level: 'warning',
           value: checkValue,
-          message: `${r.year}危废出现异常,指数${checkValue.toFixed(1)}%`
+          message: `${r.year}出现异常,指数${checkValue.toFixed(1)}%`
         })
       }
       if (checkValue > errorPoint) {
+        errorCount += 1
         banners.push({
           level: 'error',
           value: checkValue,
-          message: `${r.year}危废异常明显,指数${checkValue.toFixed(1)}%`
+          message: `${r.year}异常明显,指数${checkValue.toFixed(1)}%`
         })
       }
 
