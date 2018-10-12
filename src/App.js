@@ -30,6 +30,7 @@ import jintongMonthData from './data/jintongM'
 import baijingyuData from './data/baijingyu'
 import weixunData from './data/weixun'
 import jpysData from './data/jpys'
+import _ from 'lodash'
 import {
   Wrapper,
   ChartTitle,
@@ -74,25 +75,25 @@ const icons = {
   'error': <ErrorIcon label="Error icon" secondaryColor="inherit" />
 }
 
-const ds = new DataSet();
-/* Source data */
-ds.createView('zhongqi').source(zhongqiData)
-ds.createView('zhongqiM').source(zhongqiMonthData)
-ds.createView('desida').source(desidaData)
-ds.createView('desidaM').source(desidaMonthData)
-ds.createView('meixingpeng').source(meixingpengData)
-ds.createView('meixingpengM').source(meixingpengMonthData)
-ds.createView('daji').source(dajiData)
-ds.createView('dajiM').source(dajiMonthDate)
-ds.createView('boshi').source(boshiData)
-ds.createView('shimisi').source(shimisiData)
-ds.createView('zhengda').source(zhengdaData)
-ds.createView('wakeM').source(wakeMonthData)
-ds.createView('naerkeM').source(naerkeMonthData)
-ds.createView('jintongM').source(jintongMonthData)
-ds.createView('baijingyu').source(baijingyuData)
-ds.createView('weixun').source(weixunData)
-ds.createView('jpys').source(jpysData)
+const mapping = {
+  'zhongqi': zhongqiData,
+  'zhongqiM': zhongqiMonthData,
+  'desida': desidaData,
+  'desidaM': desidaMonthData,
+  'meixingpeng': meixingpengData,
+  'meixingpengM': meixingpengMonthData,
+  'daji': dajiData,
+  'dajiM': dajiMonthDate,
+  'boshi': boshiData,
+  'shimisi': shimisiData,
+  'zhengda': zhengdaData,
+  'wakeM': wakeMonthData,
+  'naerkeM': naerkeMonthData,
+  'jintongM': jintongMonthData,
+  'baijingyu': baijingyuData,
+  'weixun': weixunData,
+  'jpys': jpysData
+}
 
 class App extends Component {
   constructor(props) {
@@ -143,8 +144,42 @@ class App extends Component {
       offset,
       groupNumber
     } = this.state
+    const isMonthData = selected.value.match(/M/) ? true : false
+
+    const ds = new DataSet();
     
-    const dv = ds.getView(selected.value)
+    let originData = mapping[selected.value]
+    originData = _.drop(originData, offset)
+
+    const chunkedData = _.chunk(originData, groupNumber)
+    let counter = 0
+    const chunkedResult = chunkedData.map((groupElements) => {
+      counter = counter + 1
+      let result = {
+        year: `Group${counter}`
+      }
+      if (groupElements[0].water) {
+        result.water = _.reduce(groupElements, (sum, e) => {
+          return sum + e.water
+        }, 0)
+      }
+      if (groupElements[0].electricity) {
+        result.electricity = _.reduce(groupElements, (sum, e) => {
+          return sum + e.electricity
+        }, 0)
+      }
+      if (groupElements[0].waste) {
+        result.waste = _.reduce(groupElements, (sum, e) => {
+          return sum + e.waste
+        }, 0)
+      }
+      return result
+    })
+
+    ds.createView('default').source(chunkedResult)
+
+    let dv = ds.getView('default')
+    
     let hasElectricity = false
     let hasWater = false
 
@@ -205,11 +240,8 @@ class App extends Component {
     let banners = []
     let warningCount = 0
     let errorCount = 0
-    const rows = dv.rows
-    
-    const isMonthData = rows.length >= 20
 
-    rows.map((r) => {
+    dv.rows.map((r) => {
       let checkValue = 0
       if (r.waterChangeRate > 200 || r.electricityChangeRate > 200 || r.waste < 1) {
         return r
@@ -371,30 +403,6 @@ class App extends Component {
       key: 'changeType',
       value: 'changeRate'
     });
-    
-    let dsNew1
-    let dvNew1
-    if (isMonthData) {
-      dsNew1 = new DataSet();
-      dsNew1.createView('summary').source(dvNew.rows.slice(0,36))
-      dvNew1 = dsNew1.getView('summary')
-    }
-
-    let dsNew2
-    let dvNew2
-    if (isMonthData) {
-      dsNew2 = new DataSet();
-      dsNew2.createView('summary').source(dvNew.rows.slice(36,72))
-      dvNew2 = dsNew2.getView('summary')
-    }
-
-    let dsNew3
-    let dvNew3
-    if (isMonthData) {
-      dsNew3 = new DataSet();
-      dsNew3.createView('summary').source(dvNew.rows.slice(72))
-      dvNew3 = dsNew3.getView('summary')
-    }
 
     return (
       <div>
@@ -497,7 +505,7 @@ class App extends Component {
             </Chart>
           )}
 
-          {hasWater && (
+          {/* {hasWater && (
             <Chart height={400} data={dv} scale={scale} forceFit>
               <ChartTitle>水使用量</ChartTitle>
               <Axis name="year" />
@@ -530,7 +538,7 @@ class App extends Component {
                 }}
               />
             </Chart>
-          )}
+          )} */}
 
           <Chart height={400} data={dv} scale={scale} forceFit>
             <ChartTitle>危险废物量</ChartTitle>
@@ -586,78 +594,6 @@ class App extends Component {
               ]}
             />
           </Chart>
-
-          {isMonthData && (
-            <Chart height={400} data={dvNew1} scale={scale} forceFit>
-              <ChartTitle>水电、危废变化率对比1</ChartTitle>
-              <Axis name="year" />
-              <Axis name="changeRate" />
-              <Tooltip
-                crosshairs={{
-                  type: "y"
-                }}
-              />
-              <Geom
-                type="interval"
-                position="year*changeRate"
-                color={['changeType', changeColors]}
-                adjust={[
-                  {
-                    type: "dodge",
-                    marginRatio: 1 / 32
-                  }
-                ]}
-              />
-            </Chart>
-          )}
-
-          {isMonthData && (
-            <Chart height={400} data={dvNew2} scale={scale} forceFit>
-              <ChartTitle>水电、危废变化率对比2</ChartTitle>
-              <Axis name="year" />
-              <Axis name="changeRate" />
-              <Tooltip
-                crosshairs={{
-                  type: "y"
-                }}
-              />
-              <Geom
-                type="interval"
-                position="year*changeRate"
-                color={['changeType', changeColors]}
-                adjust={[
-                  {
-                    type: "dodge",
-                    marginRatio: 1 / 32
-                  }
-                ]}
-              />
-            </Chart>
-          )}
-
-          {isMonthData && (
-            <Chart height={400} data={dvNew3} scale={scale} forceFit>
-              <ChartTitle>水电、危废变化率对比3</ChartTitle>
-              <Axis name="year" />
-              <Axis name="changeRate" />
-              <Tooltip
-                crosshairs={{
-                  type: "y"
-                }}
-              />
-              <Geom
-                type="interval"
-                position="year*changeRate"
-                color={['changeType', changeColors]}
-                adjust={[
-                  {
-                    type: "dodge",
-                    marginRatio: 1 / 32
-                  }
-                ]}
-              />
-            </Chart>
-          )}
 
           {hasElectricity && (
             <Chart height={400} data={dv} scale={scale} forceFit>
