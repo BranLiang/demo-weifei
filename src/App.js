@@ -470,6 +470,41 @@ class App extends Component {
           </SelectorContainer>
         </SelectorWrapper>
         <Wrapper>
+          {hasWater && (
+            <Chart height={400} data={dv} scale={scale} forceFit>
+              <ChartTitle>水使用量</ChartTitle>
+              <Axis name="year" />
+              <Axis name="water" />
+              <Tooltip
+                crosshairs={{
+                  type: "y"
+                }}
+              />
+              <Geom
+                type="interval"
+                position="year*water"
+                color={'#172B4D'}
+              />
+              <Geom
+                type="line"
+                position="year*water"
+                color={'#172B4D'}
+                size={2}
+              />
+              <Geom
+                type="point"
+                position="year*water"
+                size={4}
+                shape={"circle"}
+                color={'#172B4D'}
+                style={{
+                  stroke: "#fff",
+                  lineWidth: 1
+                }}
+              />
+            </Chart>
+          )}
+
           {hasElectricity && (
             <Chart height={400} data={dv} scale={scale} forceFit>
               <ChartTitle>电使用量</ChartTitle>
@@ -504,41 +539,6 @@ class App extends Component {
               />
             </Chart>
           )}
-
-          {/* {hasWater && (
-            <Chart height={400} data={dv} scale={scale} forceFit>
-              <ChartTitle>水使用量</ChartTitle>
-              <Axis name="year" />
-              <Axis name="water" />
-              <Tooltip
-                crosshairs={{
-                  type: "y"
-                }}
-              />
-              <Geom
-                type="interval"
-                position="year*water"
-                color={'#172B4D'}
-              />
-              <Geom
-                type="line"
-                position="year*water"
-                color={'#172B4D'}
-                size={2}
-              />
-              <Geom
-                type="point"
-                position="year*water"
-                size={4}
-                shape={"circle"}
-                color={'#172B4D'}
-                style={{
-                  stroke: "#fff",
-                  lineWidth: 1
-                }}
-              />
-            </Chart>
-          )} */}
 
           <Chart height={400} data={dv} scale={scale} forceFit>
             <ChartTitle>危险废物量</ChartTitle>
