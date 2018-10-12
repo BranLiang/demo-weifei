@@ -101,7 +101,9 @@ class App extends Component {
     this.state = {
       selected: { label: '中旗科技股份有限公司(按月分析)', value: 'zhongqiM'},
       warningPoint: 40,
-      errorPoint: 70
+      errorPoint: 70,
+      offset: 0,
+      groupNumber: 1
     }
   }
 
@@ -115,6 +117,18 @@ class App extends Component {
     })
   }
 
+  onOffsetChange = (value) => {
+    this.setState({
+      offset: value
+    })
+  }
+
+  onGroupNumberChange = (value) => {
+    this.setState({
+      groupNumber: value
+    })
+  }
+
   onErrorPointChange = (value) => {
     this.setState({
       errorPoint: value
@@ -122,7 +136,13 @@ class App extends Component {
   }
 
   render() {
-    const { selected, warningPoint, errorPoint } = this.state
+    const {
+      selected,
+      warningPoint,
+      errorPoint,
+      offset,
+      groupNumber
+    } = this.state
     
     const dv = ds.getView(selected.value)
     let hasElectricity = false
@@ -380,6 +400,22 @@ class App extends Component {
       <div>
         <SelectorWrapper>
           <SelectorContainer>
+            计算偏移量: {offset}
+            <FieldRange
+              value={offset}
+              min={0}
+              max={6}
+              step={1}
+              onChange={this.onOffsetChange}
+            />
+            计算时间间隔: {groupNumber}
+            <FieldRange
+              value={groupNumber}
+              min={1}
+              max={6}
+              step={1}
+              onChange={this.onGroupNumberChange}
+            />
             警告系数: {warningPoint}
             <FieldRange
               value={warningPoint}
