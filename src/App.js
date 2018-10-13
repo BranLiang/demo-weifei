@@ -471,7 +471,7 @@ class App extends Component {
         </SelectorWrapper>
         <Wrapper>
           {hasWater && (
-            <Chart height={400} data={dv} scale={scale} forceFit>
+            <Chart height={250} data={dv} scale={scale} forceFit>
               <ChartTitle>水使用量</ChartTitle>
               <Axis name="year" />
               <Axis name="water" />
@@ -506,7 +506,7 @@ class App extends Component {
           )}
 
           {hasElectricity && (
-            <Chart height={400} data={dv} scale={scale} forceFit>
+            <Chart height={250} data={dv} scale={scale} forceFit>
               <ChartTitle>电使用量</ChartTitle>
               <Axis name="year" />
               <Axis name="electricity" />
@@ -540,7 +540,7 @@ class App extends Component {
             </Chart>
           )}
 
-          <Chart height={400} data={dv} scale={scale} forceFit>
+          <Chart height={250} data={dv} scale={scale} forceFit>
             <ChartTitle>危险废物量</ChartTitle>
             <Axis name="year" />
             <Axis name="waste" />

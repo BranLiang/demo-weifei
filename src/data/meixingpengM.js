@@ -95,13 +95,13 @@ const data = [
     year: '2016-04',
     electricity: 141240,
     water: 3240,
-    waste: 33.24
+    waste: 28.24
   },
   {
     year: '2016-05',
     electricity: 133800,
     water: 4848,
-    waste: 21.5
+    waste: 14.5
   },
   {
     year: '2016-06',
