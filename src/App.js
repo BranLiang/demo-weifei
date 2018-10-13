@@ -45,14 +45,14 @@ const GROUP_OPTIONS = [
   {
     label: '问题企业',
     options: [
+      { label: '南京大吉铁塔制造有限公司(按月分析)', value: 'dajiM' },
+      { label: '南京美星鹏科技实业有限公司(按月分析)', value: 'meixingpengM' },
       { label: '中旗科技股份有限公司', value: 'zhongqi' },
       { label: '中旗科技股份有限公司(按月分析)', value: 'zhongqiM' },
       { label: '南京美星鹏科技实业有限公司', value: 'meixingpeng' },
-      { label: '南京美星鹏科技实业有限公司(按月分析)', value: 'meixingpengM' },
       { label: '德司达(南京)染料有限公司', value: 'desida' },
       { label: '德司达(南京)染料有限公司(按月分析)', value: 'desidaM' },
       { label: '南京大吉铁塔制造有限公司', value: 'daji' },
-      { label: '南京大吉铁塔制造有限公司(按月分析)', value: 'dajiM' },
       { label: '瓦克(按月分析)', value: 'wakeM' },
       { label: '纳尔科(按月分析)', value: 'naerkeM' },
       { label: '金桐(按月分析)', value: 'jintongM' }
@@ -100,7 +100,7 @@ class App extends Component {
     super(props)
     
     this.state = {
-      selected: { label: '中旗科技股份有限公司(按月分析)', value: 'zhongqiM'},
+      selected: { label: '南京大吉铁塔制造有限公司(按月分析)', value: 'dajiM'},
       warningPoint: 40,
       errorPoint: 70,
       offset: 0,
@@ -149,34 +149,42 @@ class App extends Component {
     const ds = new DataSet();
     
     let originData = mapping[selected.value]
+
     originData = _.drop(originData, offset)
 
-    const chunkedData = _.chunk(originData, groupNumber)
-    let counter = 0
-    const chunkedResult = chunkedData.map((groupElements) => {
-      counter = counter + 1
-      let result = {
-        year: `Group${counter}`
-      }
-      if (groupElements[0].water) {
-        result.water = _.reduce(groupElements, (sum, e) => {
-          return sum + e.water
-        }, 0)
-      }
-      if (groupElements[0].electricity) {
-        result.electricity = _.reduce(groupElements, (sum, e) => {
-          return sum + e.electricity
-        }, 0)
-      }
-      if (groupElements[0].waste) {
-        result.waste = _.reduce(groupElements, (sum, e) => {
-          return sum + e.waste
-        }, 0)
-      }
-      return result
-    })
+    if (groupNumber !== 1) {
+      const chunkedData = _.chunk(originData, groupNumber)
+      let counter = 0
+      originData = chunkedData.map((groupElements) => {
+        counter = counter + 1
+        if (groupElements.length !== groupNumber) {
+          return false
+        }
+        let result = {
+          year: `NO.${counter}`
+        }
+        if (groupElements[0].water) {
+          result.water = _.reduce(groupElements, (sum, e) => {
+            return sum + e.water
+          }, 0)
+        }
+        if (groupElements[0].electricity) {
+          result.electricity = _.reduce(groupElements, (sum, e) => {
+            return sum + e.electricity
+          }, 0)
+        }
+        if (groupElements[0].waste) {
+          result.waste = _.reduce(groupElements, (sum, e) => {
+            return sum + e.waste
+          }, 0)
+        }
+        return result
+      })
 
-    ds.createView('default').source(chunkedResult)
+      originData = _.compact(originData)
+    }
+    
+    ds.createView('default').source(originData)
 
     let dv = ds.getView('default')
     
@@ -246,13 +254,13 @@ class App extends Component {
       if (r.waterChangeRate > 200 || r.electricityChangeRate > 200 || r.waste < 1) {
         return r
       }
-      if (r.waterChangeRate && r.electricityChangeRate) {
+      if (r.waterChangeRate && r.electricityChangeRate && r.waterChangeRate * r.electricityChangeRate > 0 && r.waterChangeRate * r.electricityChangeRate * r.wasteChangeRate < 0 ) {
         checkValue = (r.waterChangeRate + r.electricityChangeRate) / 2 - r.wasteChangeRate
       }
-      if (r.waterChangeRate && !r.electricityChangeRate) {
+      if (r.waterChangeRate && !r.electricityChangeRate && r.waterChangeRate * r.wasteChangeRate < 0) {
         checkValue = r.waterChangeRate - r.wasteChangeRate
       }
-      if (!r.waterChangeRate && r.electricityChangeRate) {
+      if (!r.waterChangeRate && r.electricityChangeRate && r.electricityChangeRate * r.wasteChangeRate < 0) {
         checkValue = r.electricityChangeRate - r.wasteChangeRate
       }
       if (checkValue > warningPoint && checkValue <= errorPoint) {
@@ -268,83 +276,6 @@ class App extends Component {
           level: 'error',
           message: `${r.year}异常明显,指数${checkValue.toFixed(1)}%`
         })
-      }
-      
-      if (!isMonthData) {
-        if (r.wasteChangeRate > warningPoint && r.wasteChangeRate <= errorPoint) {
-          banners.push({
-            level: 'warning',
-            message: `${r.year}危废增长较快,幅度为${r.wasteChangeRate.toFixed(2)}%`
-          })
-        }
-        if (r.wasteChangeRate > errorPoint) {
-          banners.push({
-            level: 'error',
-            message: `${r.year}危废增长异常, 幅度为${r.wasteChangeRate.toFixed(2)}%`
-          })
-        }
-        if (r.wasteChangeRate < -warningPoint && r.wasteChangeRate >= -errorPoint) {
-          banners.push({
-            level: 'warning',
-            message: `${r.year}危废减少较快, 幅度为${r.wasteChangeRate.toFixed(2)}%`
-          })
-        }
-        if (r.wasteChangeRate < -errorPoint) {
-          banners.push({
-            level: 'error',
-            message: `${r.year}危废减少异常, 幅度为${r.wasteChangeRate.toFixed(2)}%`
-          })
-        }
-  
-        if (r.WDEChangeRate > warningPoint && r.WDEChangeRate <= errorPoint) {
-          banners.push({
-            level: 'warning',
-            message: `${r.year}危废电量比增长较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-          })
-        }
-        if (r.WDEChangeRate > errorPoint) {
-          banners.push({
-            level: 'error',
-            message: `${r.year}危废电量比增长异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-          })
-        }
-        if (r.WDEChangeRate < -warningPoint && r.WDEChangeRate >= -errorPoint) {
-          banners.push({
-            level: 'warning',
-            message: `${r.year}危废电量比减少较快, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-          })
-        }
-        if (r.WDEChangeRate < -errorPoint) {
-          banners.push({
-            level: 'error',
-            message: `${r.year}危废电量比减少异常, 幅度为${r.WDEChangeRate.toFixed(2)}%`
-          })
-        }
-  
-        if (r.WDWChangeRate > warningPoint && r.WDWChangeRate <= errorPoint) {
-          banners.push({
-            level: 'warning',
-            message: `${r.year}危废水量比增长较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
-          })
-        }
-        if (r.WDWChangeRate > errorPoint) {
-          banners.push({
-            level: 'error',
-            message: `${r.year}危废水量比增长异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
-          })
-        }
-        if (r.WDWChangeRate < -warningPoint && r.WDWChangeRate >= -errorPoint) {
-          banners.push({
-            level: 'warning',
-            message: `${r.year}危废水量比减少较快, 幅度为${r.WDWChangeRate.toFixed(2)}%`
-          })
-        }
-        if (r.WDWChangeRate < -errorPoint) {
-          banners.push({
-            level: 'error',
-            message: `${r.year}危废水量比减少异常, 幅度为${r.WDWChangeRate.toFixed(2)}%`
-          })
-        }
       }
 
       return r
@@ -420,7 +351,7 @@ class App extends Component {
             <FieldRange
               value={groupNumber}
               min={1}
-              max={6}
+              max={12}
               step={1}
               onChange={this.onGroupNumberChange}
             />
