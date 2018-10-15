@@ -144,8 +144,6 @@ class App extends Component {
       offset,
       groupNumber
     } = this.state
-    const isMonthData = selected.value.match(/M/) ? true : false
-
     const ds = new DataSet();
     
     let originData = mapping[selected.value]

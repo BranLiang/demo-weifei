@@ -8,7 +8,7 @@ const data = [
   },
   {
     year: '2015-02',
-    water: 29691,
+    water: 48870,
     waste: 89.95
   },
   {
